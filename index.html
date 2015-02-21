@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Smartlaunch.com -->
+		<title>HTML5 Login</title>
+		<link rel="stylesheet" href="normalize.css">
+		<link rel="stylesheet" href="style.css">
+		<script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+		<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+		<script>
+			// Initialization
+			$.getScript("login.js", function(){
+				console.log("Script loaded and executed.");
+				// Use anything defined in the loaded script...
+			});
+		</script>
+	</head>
+	<body>
+		<div id="wrapper">
+
+			<!-- Login below -->
+			<section class="loginform cf" id="loginform">
+			<!-- <form name="login" action="$PORTAL_ACTION$"> -->
+			<form name="login">
+					<ul>
+						<li>
+							<label for="auth_user">Username</label>
+							<input id="auth_user" name="auth_user" type="text" placeholder="SL Username" required="true">
+							<br><br>
+						</li>
+						<li>
+							<label for="auth_pass">Password</label>
+							<input id="auth_pass" name="auth_pass" type="password" placeholder="SL Password">
+							<br><br>
+						</li>
+						<li>
+							<Label for="auth_voucher">Optional Voucher</label>
+							<input id="auth_voucher" name="auth_voucher" type="text" Placeholder="Optional Voucher Code">
+							<br><br>
+						</li>
+						<input name="redirurl" type="hidden" value="$PORTAL_REDIRURL$">
+						<li>
+						<!-- <input name="accept" id="submit" type="submit" value="Login to Access WiFi" onclick="doJSON1();"> -->
+						<button name="accept" id="accept" type="button" onclick="tryLogin()">Login</button>
+					</ul>
+				</form>
+			</section>
+			<!-- /Login above -->
+
+		</div> <!-- /Wrapper -->
+	</body>
+</html>
