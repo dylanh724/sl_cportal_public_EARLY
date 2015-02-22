@@ -1,5 +1,5 @@
 html {
-	background: url('blue.png');
+	background: url('captiveportal-blue.png');
 	font-size: 10pt;
 }
 #wrapper {
@@ -9,6 +9,10 @@ html {
 label {
 	display: block;
 	color: #999;
+}
+#dialog {
+	margin-bottom: -100px;
+	text-align: center;
 }
 .error {
 	border-color:#F00;

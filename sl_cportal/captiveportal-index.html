@@ -3,15 +3,16 @@
 	<head>
 		<!-- Smartlaunch.com -->
 		<title>HTML5 Login</title>
-		<link rel="stylesheet" href="normalize.css">
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="captiveportal-normalize.css">
+		<link rel="stylesheet" href="captiveportal-style.css">
 		<script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+		<script src="captiveportal-sl_ip.js"></script>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
 		<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
 		<script>
 			// Initialization
-			$.getScript("login.js", function(){
-				console.log("Script loaded and executed.");
+			$.getScript("captiveportal-login.js", function(){
+				console.log("Scripts loaded and executed.");
 				// Use anything defined in the loaded script...
 			});
 		</script>
@@ -22,7 +23,7 @@
 			<!-- Login below -->
 			<section class="loginform cf" id="loginform">
 			<!-- <form name="login" action="$PORTAL_ACTION$"> -->
-			<form name="login">
+			<form name="login" id="login">
 					<ul>
 						<li>
 							<label for="auth_user">Username</label>
@@ -41,7 +42,6 @@
 						</li>
 						<input name="redirurl" type="hidden" value="$PORTAL_REDIRURL$">
 						<li>
-						<!-- <input name="accept" id="submit" type="submit" value="Login to Access WiFi" onclick="doJSON1();"> -->
 						<button name="accept" id="accept" type="button" onclick="tryLogin()">Login</button>
 					</ul>
 				</form>
