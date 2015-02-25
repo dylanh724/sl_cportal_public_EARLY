@@ -20,11 +20,11 @@ var ServerIP = server[0];   // local IP
 var ServerPort = server[1]; // RESTful port
 var ServerAddress = Prefix + ServerIP + ":" + ServerPort;
 
-// TODO: Find Server IP & port
-
 // 3: Main >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function tryLogin() {
     // Get User + pass (+voucher) from form
+    var data = "<?php echo json_encode($var); ?>";
+    alert(data);
     var user = document.getElementById( 'auth_user' ).value;
     var pass = document.getElementById( 'auth_pass' ).value;
     var voucher = document.getElementById( 'auth_voucher' ).value;
@@ -33,6 +33,55 @@ function tryLogin() {
     if (initValidate(user, pass, voucher, voucherLogin)) {
         login(user, pass);
     }
+}
+
+// RESTful query
+function getData (request) {
+    var data = [];
+    $.ajax({
+        url : 'query.php',
+        type : 'POST',
+        data : data,
+        dataType : 'json',
+        success : function (result) {
+            alert(result['ajax']); // "Hello world!" alerted
+            console.log(result['advert']) // The value of your php $row['adverts'] will be displayed
+        },
+        error : function () {
+            alert("error");
+        }
+    })
+}
+
+
+// asdf2
+function asdf(){
+    $.ajax({
+        url:'query.php',
+        type:'POST',
+        // get the selected values from 3 form fields
+        data:'color=' + $('#color').val() +
+        '&age=' + $('#age').val() +
+        '&name=' + $('#name').val(),
+        success:function(data) {
+            // ...
+        }
+    });
+    return false;
+}
+
+// handles the click event, sends the query
+function asdf2() {
+    $.ajax({
+        url:'query.php',
+        complete: function (response) {
+            $('#output').html(response.responseText);
+        },
+        error: function () {
+            $('#output').html('Bummer: there was an error!');
+        }
+    });
+    return false;
 }
 
 // 4: Validate form >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -73,10 +122,12 @@ function login(user, pass) {
     console.log("Attempting GET (Boolean) >> " + ServerAddress + "/cportal/login?username=" + user + "&password=***");
     $.getJSON(request, function (result) {
         if (result) {
+            // Login Successful - show fancy alert
             $(' <div id="dialog" title="Successful Login">Success! Logging in..</div>').dialog();
             console.log("Successfully logged into SL");
             finalEvents();
         } else {
+            // Login Failed - show fancy alert
             $(' <div id="dialog" title="Failed Login">Invalid Credentials<br>(or unavailable WiFi slot)</div>').dialog({
                 modal: true,
                 draggable: true,
@@ -99,7 +150,7 @@ function finalEvents() {
         form.style.display = 'hidden';
         document.body.appendChild(form)
         form.submit();
-        //$.post( "$PORTAL_ACTION$" );
+        $.post( "" );
     }
     catch(e) {
         setError("POST", "Unknown Error");

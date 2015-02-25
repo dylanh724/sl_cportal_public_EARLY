@@ -3,14 +3,14 @@
 	<head>
 		<!-- Smartlaunch.com -->
 		<title>HTML5 Login</title>
-		<link rel="stylesheet" href="captiveportal-normalize.css">
-		<link rel="stylesheet" href="captiveportal-style.css">
-		<script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-		<script src="captiveportal-sl_ip.js"></script>
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
-		<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+		<link type="text/css" rel="stylesheet" href="captiveportal-normalize.css">
+		<link type="text/css" rel="stylesheet" href="captiveportal-style.css">
+		<link type="text/css"  rel="stylesheet" href="captiveportal-jquery-ui.css">
+		<script type="text/javascript" charset="utf-8" src="captiveportal-jquery-2.0.3.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="captiveportal-sl_ip.js"></script>
+		<script type="text/javascript" charset="utf-8" src="captiveportal-jquery-ui.js"></script>
 		<script>
-			// Initialization
+			// Initialization - load main script
 			$.getScript("captiveportal-login.js", function(){
 				console.log("Scripts loaded and executed.");
 				// Use anything defined in the loaded script...
@@ -40,9 +40,9 @@
 							<input id="auth_voucher" name="auth_voucher" type="text" Placeholder="Optional Voucher Code">
 							<br><br>
 						</li>
-						<input name="redirurl" type="hidden" value="$PORTAL_REDIRURL$">
+						<input name="redirurl" type="hidden" value="">
 						<li>
-						<button name="accept" id="accept" type="button" onclick="tryLogin()">Login</button>
+						<button name="accept" id="accept" type="button" value="continue" onclick="tryLogin()">Login</button>
 					</ul>
 				</form>
 			</section>
