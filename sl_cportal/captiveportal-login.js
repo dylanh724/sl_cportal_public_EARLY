@@ -1,12 +1,21 @@
 /**
- * Created by Dylan @ Smartlaunch on 2/15/2015.
+ * Created by Dylan Hunt @ Smartlaunch on 2/15/2015.
  */
+
 // 0: Error catching >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $.ajaxSetup({
     // Usually triggered by invalid server IP:Port
     // (or if captiveportal-sl_ip.js not found)
-    "error":function() { alert("Unknown Error"); }
+    "error":function() { 
+		console.log("Unknown AJAX Error");
+		alert("Unknown AJAX Error");
+	}
 });
+
+function setError(e, msg) {
+    // Trigger error
+    $.error(msg + " @ " + e);
+}
 
 // 1: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $(document).ready(function() {
@@ -20,71 +29,22 @@ var ServerIP = server[0];   // local IP
 var ServerPort = server[1]; // RESTful port
 var ServerAddress = Prefix + ServerIP + ":" + ServerPort;
 
-// 3: Main >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 3: Main: Button just clicked>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function tryLogin() {
     // Get User + pass (+voucher) from form
-    var data = "<?php echo json_encode($var); ?>";
-    alert(data);
     var user = document.getElementById( 'auth_user' ).value;
     var pass = document.getElementById( 'auth_pass' ).value;
     var voucher = document.getElementById( 'auth_voucher' ).value;
     var voucherLogin = false;
-    if (voucher !== "") { voucherLogin = true }
+    if (voucher !== "") {
+        voucherLogin = true
+    }
     if (initValidate(user, pass, voucher, voucherLogin)) {
-        login(user, pass);
+        loginSL(user, pass);
     }
 }
 
-// RESTful query
-function getData (request) {
-    var data = [];
-    $.ajax({
-        url : 'query.php',
-        type : 'POST',
-        data : data,
-        dataType : 'json',
-        success : function (result) {
-            alert(result['ajax']); // "Hello world!" alerted
-            console.log(result['advert']) // The value of your php $row['adverts'] will be displayed
-        },
-        error : function () {
-            alert("error");
-        }
-    })
-}
-
-
-// asdf2
-function asdf(){
-    $.ajax({
-        url:'query.php',
-        type:'POST',
-        // get the selected values from 3 form fields
-        data:'color=' + $('#color').val() +
-        '&age=' + $('#age').val() +
-        '&name=' + $('#name').val(),
-        success:function(data) {
-            // ...
-        }
-    });
-    return false;
-}
-
-// handles the click event, sends the query
-function asdf2() {
-    $.ajax({
-        url:'query.php',
-        complete: function (response) {
-            $('#output').html(response.responseText);
-        },
-        error: function () {
-            $('#output').html('Bummer: there was an error!');
-        }
-    });
-    return false;
-}
-
-// 4: Validate form >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 4: Validate form BEFORE RESTful >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function initValidate(_user, _pass, _voucher, _voucherLogin) {
     if (_voucherLogin) {
         // Check for invalid voucher (ignore user+pass)
@@ -108,51 +68,86 @@ function initValidate(_user, _pass, _voucher, _voucherLogin) {
     }
 }
 
-// 5: Set error on fail >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-function setError(e, msg){
-    // Trigger error
-    $.error(msg + " @ " + e)
+// 5: Success: Finally login the user to SL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+function loginSL(user, pass) {
+    // PHP:  http://localhost:7833/cportal/login&username=dylan&password=asdf
+    // REST: http://localhost:7833/cportal/login?username=dylan&password=asdf
+    console.log("User '" + user + "' attempting SL login @ " + ServerAddress + "..");
+    console.log("Attempting GET (Boolean) >> " + ServerAddress + "/cportal/login?username=" + user + "&password=***");
+    var request = "cportal/login&username=" + user + "&password=" + pass;
+    SendAjaxPOST(request);
 }
 
-// 6: Success: Finally login the user >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-function login(user, pass) {
-    // http://localhost:7833/cportal/login?username=dylan&password=asdf
-    console.log("User '" + user + "' attempting login @ " + ServerAddress + "..");
-    var request = ServerAddress + "/cportal/login?username=" + user + "&password=" + pass;
-    console.log("Attempting GET (Boolean) >> " + ServerAddress + "/cportal/login?username=" + user + "&password=***");
-    $.getJSON(request, function (result) {
-        if (result) {
-            // Login Successful - show fancy alert
-            $(' <div id="dialog" title="Successful Login">Success! Logging in..</div>').dialog();
-            console.log("Successfully logged into SL");
-            finalEvents();
-        } else {
-            // Login Failed - show fancy alert
-            $(' <div id="dialog" title="Failed Login">Invalid Credentials<br>(or unavailable WiFi slot)</div>').dialog({
-                modal: true,
-                draggable: true,
-                resizable: false,
-            });
-            console.log("Invalid credentials, or unavailable WiFi slot");
+// 6: Get RESTful data via cross-domain ajax via PHP (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>
+function SendAjaxPOST(request) {
+    // captiveportal-restquery.php?resturl=http://192.168.0.25:7833/cportal/login&username=dylan&password=asdf
+    var baseURL = "captiveportal-restquery.php?resturl=" + ServerAddress + "/";
+    var completeURL = baseURL + request;
+	console.log(completeURL);
+    $.ajax({
+        url: completeURL,
+        type: 'POST',
+        //dataType: 'json',
+        cache: false,
+        success: function (data) {
+            //alert(data);
+            var JSONdata = JSON.parse(data);
+            var login = JSONdata[0];
+            var msg = JSONdata[1];
+			finalValidate(login, msg);
         }
     });
 }
 
-// 7: Final events after successful login (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-function finalEvents() {
-    // Final events after login success
-    console.log("Attempting final actions/POST..")
+// 7: Final login validation: True/False? >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+function finalValidate(login, msg) {
+    alert(login);
+    //alert ("=");
+    //alert(login = true);
+    //alert ("==");
+    //alert(login == true);
+    //alert ("===");
+    //alert(login === true);
+
+    if (login) {
+        // Login Successful - show fancy alert
+        $(' <div id="dialog" title="Smartlaunch">Successful Login<br><em>Please wait..</em></div>').dialog({
+            modal: true,
+            draggable: false,
+            resizable: false
+        });
+        console.log(msg);
+        loginCPortal();
+    } else if (!login) {
+        // Login Failed - show fancy alert
+        $(' <div id="dialog" title="Failed Login"><span id="msg"></span></div>').dialog({
+            modal: true,
+            draggable: false,
+            resizable: false
+        });
+        $(' #msg ').html(msg);
+        console.log(msg);
+    } else {
+        alert("Unknown error during final validation");
+        console.log("Unknown error during final validation");
+    }
+}
+
+// 8: Already logged in SL, so now login to CPortal (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>>
+function loginCPortal() {
+    // Final events after loginSL success
+    console.log("Attempting final actions/POST..");
     try {
         // POST
         var form = document.createElement('loginform');
         form.setAttribute('method', 'post');
-        form.setAttribute('action', '$PORTAL_ACTION$');
+        form.setAttribute('action', '');
         form.style.display = 'hidden';
-        document.body.appendChild(form)
+        document.body.appendChild(form);
         form.submit();
         $.post( "" );
     }
     catch(e) {
-        setError("POST", "Unknown Error");
+        setError("POST", "Unknown POST Error");
     }
 }

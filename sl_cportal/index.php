@@ -8,7 +8,7 @@
 	<body>
 		<?php
 			
-			$service_url = 'http://192.168.0.10:7833/users/buloy';
+			$service_url = 'http://192.168.0.25:7833/users/dylan';
 			$curl = curl_init ( $service_url );
 			curl_setopt ( $curl, CURLOPT_RETURNTRANSFER, true );
 			$curl_response = curl_exec ( $curl );

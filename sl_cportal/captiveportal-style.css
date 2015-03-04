@@ -17,6 +17,15 @@ label {
 	margin-bottom: -100px;
 	text-align: center;
 }
+.ui-dialog .ui-dialog-titlebar{
+     text-align: center;
+     width: 100%;
+}
+/* TODO */
+.ui-dialog .ui-dialog-title .ui-icon {
+    float: left;
+    margin-right: 4px;
+}
 .error {
 	border-color:#F00;
 }

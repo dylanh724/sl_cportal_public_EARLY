@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Created by Dylan Hunt @ Smartlaunch -->
+		<title>Smartlaunch WiFi Login</title>
+		<!-- Favicon 196x196 -->
+		<link rel="icon" href="captiveportal-favicon.png">
+		<!-- jQuery-UI Style -->
+		<link rel="stylesheet" href="captiveportal-jquery-ui.css">
+		<!-- Main Style -->
+		<link type="text/css" rel="stylesheet" href="captiveportal-normalize.css">
+		<link type="text/css" rel="stylesheet" href="captiveportal-style.css">
+		<!-- jQuery Scripts -->
+		<script src="captiveportal-jquery-2.1.3.js"></script>
+		<!-- jQuery-UI Scripts -->
+		<script src="captiveportal-jquery-ui.js"></script>
+		<!-- Smartlaunch Scripts -->
+		<script type="text/javascript" charset="utf-8" src="captiveportal-sl_ip.js"></script>
+		<script>
+			// Initialization - load main script
+			$.getScript("captiveportal-login.js", function(){
+				console.log("Scripts loaded and executed.");
+				// Use anything defined in the loaded script...
+			});
+		</script>
+	</head>
+	<body>
+		<div id="wrapper">
+
+			<!-- Login below -->
+			<section class="loginform cf" id="loginform">
+			<!-- <form name="loginSL" action="$PORTAL_ACTION$"> -->
+			<form name="login" id="login">
+					<ul>
+						<li>
+							<label for="auth_user">Username</label>
+							<input id="auth_user" name="auth_user" type="text" placeholder="SL Username" required="true">
+							<br><br>
+						</li>
+						<li>
+							<label for="auth_pass">Password</label>
+							<input id="auth_pass" name="auth_pass" type="password" placeholder="SL Password">
+							<br><br>
+						</li>
+						<li>
+							<Label for="auth_voucher">Optional Voucher</label>
+							<input id="auth_voucher" name="auth_voucher" type="text" Placeholder="Optional Voucher Code">
+							<br><br>
+						</li>
+						<input name="redirurl" type="hidden" value="">
+						<li>
+						<button name="accept" id="accept" type="button" value="continue" onclick="tryLogin()">Login</button>
+					</ul>
+				</form>
+			</section>
+			<!-- /Login above -->
+
+		</div> <!-- /Wrapper -->
+	</body>
+</html>
