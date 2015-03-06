@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<!-- Smartlaunch.com -->
+		<!-- Created by Dylan Hunt @ Smartlaunch -->
 		<title>HTML5 Login</title>
-		<link type="text/css" rel="stylesheet" href="captiveportal-normalize.css">
-		<link type="text/css" rel="stylesheet" href="captiveportal-style.css">
-		<link type="text/css"  rel="stylesheet" href="captiveportal-jquery-ui.css">
-		<script type="text/javascript" charset="utf-8" src="captiveportal-jquery-2.0.3.min.js"></script>
+		<!-- jQuery-UI Style -->
+		<link rel="stylesheet" href="jquery-ui.css">
+		<!-- Main Style -->
+		<link type="text/css" rel="stylesheet" href="normalize.css">
+		<link type="text/css" rel="stylesheet" href="style.css">
+		<!-- jQuery Scripts -->
+		<script src="jquery-2.1.3.js"></script>
+		<!-- jQuery-UI Scripts -->
+		<script src="jquery-ui.js"></script
+		<script src="jquery.js"></script>
+		<!-- Smartlaunch Scripts -->
 		<script type="text/javascript" charset="utf-8" src="captiveportal-sl_ip.js"></script>
-		<script type="text/javascript" charset="utf-8" src="captiveportal-jquery-ui.js"></script>
 		<script>
 			// Initialization - load main script
-			$.getScript("captiveportal-login.js", function(){
+			$.getScript("login.js", function(){
 				console.log("Scripts loaded and executed.");
 				// Use anything defined in the loaded script...
 			});
@@ -22,7 +28,7 @@
 
 			<!-- Login below -->
 			<section class="loginform cf" id="loginform">
-			<!-- <form name="login" action="$PORTAL_ACTION$"> -->
+			<!-- <form name="loginSL" action="$PORTAL_ACTION$"> -->
 			<form name="login" id="login">
 					<ul>
 						<li>
@@ -46,8 +52,8 @@
 					</ul>
 				</form>
 			</section>
-			<!-- /Login above -->
-
+			<!-- /Login above -->			
+						
 		</div> <!-- /Wrapper -->
 	</body>
 </html>

@@ -16,30 +16,30 @@ function setError(e, msg) {
     // Trigger error
     $.error(msg + " @ " + e);
 }
-// 1: Globals >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-var Prefix = "http://";
-var ServerIP = server[0];   // local IP
-var ServerPort = server[1]; // RESTful port
-var ServerAddress = Prefix + ServerIP + ":" + ServerPort;
-var RedirURL = "";
-var PortalAction = "";
 
-// 2: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 1: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $(document).ready(function() {
     // 1: Fade in
     $('#wrapper').fadeIn(1200);
 
     // 2: Update redirurl (after PHP swaps values)
     RedirURL = document.getElementById( 'redirurl').value;
-    //alert(RedirURL);
+    $( '.redirurl' ).remove();
+    alert(RedirURL);
 
     // 3: Update portal action (after PHP swaps values)
     PortalAction = document.getElementById( 'portalaction').value;
-    //alert(PortalAction);
-
-    // 4: Remove #2 & #3 from html since it's no longer needed
-    $( '.remove' ).remove();
+    $( '.portalaction' ).remove();
+    alert(PortalAction);
 });
+
+// 2: Globals >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+var Prefix = "http://";
+var ServerIP = server[0];   // local IP
+var ServerPort = server[1]; // RESTful port
+var ServerAddress = Prefix + ServerIP + ":" + ServerPort;
+var RedirURL = "http://www.smartlaunch.com";
+var PortalAction = "";
 
 // 3: Main: Button just clicked>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function tryLogin() {
@@ -95,7 +95,7 @@ function SendAjaxPOST(request) {
     // captiveportal-restquery.php?resturl=http://192.168.0.25:7833/cportal/login&username=dylan&password=asdf
     var baseURL = "captiveportal-restquery.php?resturl=" + ServerAddress + "/";
     var completeURL = baseURL + request;
-	//console.log(completeURL); //PHP URL
+	console.log(completeURL);
     $.ajax({
         url: completeURL,
         type: 'POST',
@@ -130,7 +130,7 @@ function finalValidate(login, msg) {
             resizable: false
         });
         $(' #msg ').html(msg);
-        console.log("SL Server Fail Reason: " + msg);
+        console.log(msg);
     } else {
         alert("Unknown error during final validation");
         console.log("Unknown error during final validation");
@@ -141,34 +141,33 @@ function finalValidate(login, msg) {
 function loginCPortal() {
     // Final events after loginSL success
     console.log("Attempting final actions/POST..");
-
-    // Create dummy form and submit
     try {
-        // Create dummy form and submit
+        // POST
         var my_form = document.createElement('FORM');
-        //my_form.name = 'loginform2';
-        my_form.method = 'POST';
-        my_form.action = PortalAction;
-        my_form.display =  'hidden';
+        my_form.name='myForm';
+        my_form.method='POST';
+        my_form.action='http://192.168.0.1:8000';
+        my_form.display = 'hidden';
 
-        // redirurl
-        var my_tb = document.createElement('INPUT');
-        my_tb.type = 'HIDDEN';
-        my_tb.name = 'redirurl';
-        my_tb.value = RedirURL;
+        var my_tb=document.createElement('INPUT');
+        my_tb.type='HIDDEN';
+        my_tb.name='hidden1';
+        my_tb.value='http://www.smartlaunch.com';
         my_form.appendChild(my_tb);
-
-        // submit btn
-        var my_btn = document.createElement('INPUT');
-        my_btn.type = 'SUBMIT';
-        my_btn.name = 'accept';
-        my_btn.value = 'accept';
-        my_form.appendchild(my_btn);
+        var loginform = $( ".loginform" );
+        document.body.loginform.appendChild(my_form);
+        //document.body.appendChild(my_form);
         my_form.submit();
 
-        document.body.appendChild(my_form);
+        //var form = document.createElement('loginform');
+        //form.setAttribute('method', 'post');
+        //form.setAttribute('action', 'http://192.168.0.1:8000');
+        //form.style.display = 'hidden';
+        //document.body.appendChild(form);
+        //form.submit();
+        //$.post( "" );
     }
     catch(e) {
-        setError("POST (loginCPortal)", "Unknown POST Error");
+        setError("POST", "Unknown POST Error");
     }
 }
