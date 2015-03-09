@@ -1,6 +1,6 @@
 /**
- * captiveportal-login.js
- * Created by Dylan Hunt @ Smartlaunch on 2/15/2015.
+ * captiveportal-logout.js
+ * Created by Dylan Hunt @ Smartlaunch on 3/08/2015.
  */
 
 // 0: Error catching >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -25,14 +25,16 @@ var ServerAddress = Prefix + ServerIP + ":" + ServerPort;
 var RedirURL = "";
 var PortalAction = "";
 var User = "";
+var logoutID = "";
+var zone = "";
 
 // 2: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $(document).ready(function() {
     // 1: Fade in
     $('#wrapper').fadeIn(1200);
 
-    // 2: Update redirurl (after PHP swaps values)
-    RedirURL = document.getElementById( 'redirurl').value;
+    // 2: Update logout_id (after PHP swaps values)
+    logoutID = document.getElementById( 'redirurl').value;
     //alert(RedirURL);
 
     // 3: Update portal action (after PHP swaps values)
@@ -50,6 +52,7 @@ function tryLogin() {
     var pass = document.getElementById( 'auth_pass' ).value;
     var voucher = document.getElementById( 'auth_voucher' ).value;
     var voucherLogin = false;
+
     if (voucher !== "") {
         voucherLogin = true
     }
@@ -168,14 +171,6 @@ function loginCPortal() {
         input_auth_user.type = 'HIDDEN';
         input_auth_user.value = User; // Obtained from 'auth_user2' form value
         submit_form.appendChild(input_auth_user);
-
-        // test
-        var input_test = document.createElement('test');
-        input_test.name = 'test';
-        input_test.class = 'hideMe';
-        input_test.type = 'HIDDEN';
-        input_test.value = 'test123';
-        submit_form.appendChild(input_test);
 
         // submit btn
         var btnSubmit = document.createElement('input');

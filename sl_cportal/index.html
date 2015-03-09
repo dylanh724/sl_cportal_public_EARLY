@@ -19,21 +19,21 @@
 		<script>
 			// Initialization - load main script
 			$.getScript("captiveportal-login.js", function(){
-				console.log("Scripts loaded and executed.");
+				console.log("Login scripts loaded and executed.");
 				// Use anything defined in the loaded script...
 			});
 		</script>
 	</head>
 	<body>
-		<div id="wrapper">
+		<div id="wrapper">  <!-- Wrapper -->
 
 			<!-- Login below -->
 			<section class="loginform cf" id="loginform">
 			<form name="login" id="login">
 					<ul>
 						<li>
-							<label for="auth_user">Username</label>
-							<input id="auth_user" name="auth_user" type="text" placeholder="SL Username" required="true">
+							<label for="auth_user2">Username</label>
+							<input id="auth_user2" name="auth_user" type="text" placeholder="SL Username" required="true">
 							<br><br>
 						</li>
 						<li>
@@ -47,23 +47,26 @@
 							<br><br>
 						</li>
 						<li>
-							<input name="redirurl2" class = "remove" id="redirurl" type="hidden" value="$PORTAL_REDIRURL$">
-							<input name="portalaction2" class = "remove" id="portalaction" type="hidden" value="$PORTAL_ACTION$">
-							<button name="accept2" id="accept" type="button" value="continue" onclick="tryLogin()">Login</button>
+							<div class="remove">
+								<input name="redirurl2" id="redirurl" type="hidden" value="$PORTAL_REDIRURL$">
+								<input name="portalaction2" id="portalaction" type="hidden" value="$PORTAL_ACTION$">
+							</div>
+							<input name="logouturl" id="logouturl" type="hidden" value="$PORTAL_ACTION$">
+							<button name="accept2" id="accept2" type="button" value="continue" onclick="tryLogin()">Login</button>
 					</ul>
 				</form>
 			</section>
 			<!-- /Login above -->
 
-			<!-- TEST -->
-			<form method="post" action="$PORTAL_ACTION$">
-				<input name="auth_user2" type="text">
-				<input name="auth_pass2" type="password">
-				<input name="auth_voucher2" type="text">
-				<input name="redirurl2" type="hidden" value="$PORTAL_REDIRURL$">
-				<input name="accept2" type="submit" value="Continue33">
-			</form>
-			<!-- /TEST -->
+			<!-- Logout below -->
+			<section class="loginform cf" id="logoutform">
+				<form name="logout" id="logout" method="POST" action="<?=$logouturl;?>">
+					<INPUT name="logout_id" type="hidden" value="<?=$sessionid;?>">
+					<INPUT name="zone" type="hidden" value="<?=$cpzone;?>">
+					<INPUT name="logout" type="submit" value="Logout">
+				</form>
+			</section>
+			<!-- /Logout above -->
 
 		</div> <!-- /Wrapper -->
 	</body>
