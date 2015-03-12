@@ -1,10 +1,11 @@
 <?php
 
-	####################
-	# --SMARTLAUNCH--  #
-	# Created by Edwin #	
-	# Altered by Dylan #
-	####################
+	###################################################################################
+	# --SMARTLAUNCH--
+	# Created by Edwin
+	# Altered by Dylan on 3/1/2015
+	# captiveportal-restquery.php
+	###################################################################################
 
 	# GET >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     # http://localhost/sl_cportal_test/captiveportal-restquery.php?resturl=http://localhost:7833/cportal/login&username=dylan&password=asdf

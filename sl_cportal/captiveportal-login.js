@@ -2,8 +2,8 @@
  * captiveportal-login.js
  * Created by Dylan Hunt @ Smartlaunch on 2/15/2015.
  */
-
-// 0: Error catching >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// LOGIN (Register @ bottom) #####################################################################################
+// 0: Error catching >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $.ajaxSetup({
     // Usually triggered by invalid server IP:Port
     // (or if captiveportal-sl_ip.js not found)
@@ -17,33 +17,50 @@ function setError(e, msg) {
     // Trigger error
     $.error(msg + " @ " + e);
 }
-// 1: Globals >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-var Prefix = "http://";
-var ServerIP = server[0];   // local IP
-var ServerPort = server[1]; // RESTful port
-var ServerAddress = Prefix + ServerIP + ":" + ServerPort;
-var RedirURL = "";
-var PortalAction = "";
-var User = "";
+// 1: Globals >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+var Prefix = "http://";                                     // ## EXAMPLES ##
+var ServerIP = server[0];                                   // local IP; 192.168.0.25
+var ServerPort = server[1];                                 // RESTful port; 8080
+var ServerAddress = Prefix + ServerIP + ":" + ServerPort;   // http://192.168.0.25:8080
+var RedirURL = "";                                          // logout.php
+var PortalAction = "";                                      // #
+var User = "";                                              // dylan
 
-// 2: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 2: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $(document).ready(function() {
-    // 1: Fade in
+    // a) Fade in
     $('#wrapper').fadeIn(1200);
 
-    // 2: Update redirurl (after PHP swaps values)
-    RedirURL = document.getElementById( 'redirurl').value;
+    // b) Update redirurl (after PHP swaps values)
+    RedirURL = document.getElementById('redirurl').value;
     //alert(RedirURL);
 
-    // 3: Update portal action (after PHP swaps values)
-    PortalAction = document.getElementById( 'portalaction').value;
+    // c) Update portal action (after PHP swaps values)
+    PortalAction = document.getElementById('portalaction').value;
     //alert(PortalAction);
 
-    // 4: Remove #2 & #3 from html since it's no longer needed
+    // d) Remove b) & c) code from html since it's no longer needed (don't want end-user to see it)
     $( '.remove' ).remove();
+
+    // e) <ENTER> event
+    $( '#auth_pass', '#auth_voucher' ).keyup(function(event){
+        if(event.keyCode == 13){
+            $( '#accept2' ).click();
+        }
+    });
+
+    // f) TOS accordion by ID
+    $(function() {
+        $( "#tos" ).accordion({
+            collapsible: true,
+            active: false
+        });
+    });
+
+// End init
 });
 
-// 3: Main: Button just clicked>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 3: Main: Button just clicked>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function tryLogin() {
     // Get User + pass (+voucher) from form
     User = document.getElementById( 'auth_user2' ).value;
@@ -58,7 +75,7 @@ function tryLogin() {
     }
 }
 
-// 4: Validate form BEFORE RESTful >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 4: Validate form BEFORE RESTful >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function initValidate(_pass, _voucher, _voucherLogin) {
     if (_voucherLogin) {
         // Check for invalid voucher (ignore user+pass)
@@ -82,7 +99,7 @@ function initValidate(_pass, _voucher, _voucherLogin) {
     }
 }
 
-// 5: Success: Finally login the user to SL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 5: Success: Finally login the user to SL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function loginSL(pass) {
     // PHP:  http://localhost:7833/cportal/login&username=dylan&password=asdf
     // REST: http://localhost:7833/cportal/login?username=dylan&password=asdf
@@ -92,7 +109,7 @@ function loginSL(pass) {
     SendAjaxPOST(request);
 }
 
-// 6: Get RESTful data via cross-domain ajax via PHP (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>
+// 6: Get RESTful data via cross-domain ajax via PHP (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function SendAjaxPOST(request) {
     // captiveportal-restquery.php?resturl=http://192.168.0.25:7833/cportal/login&username=dylan&password=asdf
     var baseURL = "captiveportal-restquery.php?resturl=" + ServerAddress + "/";
@@ -113,7 +130,7 @@ function SendAjaxPOST(request) {
     });
 }
 
-// 7: Final login validation: True/False? >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 7: Final login validation: True/False? >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function finalValidate(login, msg) {
     if (login) {
         // Login Successful - show fancy alert
@@ -132,36 +149,38 @@ function finalValidate(login, msg) {
             resizable: false
         });
         $(' #msg ').html(msg);
-        console.log("SL Server Fail Reason: " + msg);
+        console.log("SL Server Login Fail Reason: " + msg);
     } else {
-        alert("Unknown error during final validation");
-        console.log("Unknown error during final validation");
+        alert("Unknown error during final login validation");
+        console.log("Unknown error during final login validation");
     }
 }
 
-// 8: Already logged in SL, so now login to CPortal (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 8: Already logged in SL, so now login to CPortal (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function loginCPortal() {
     // Final events after loginSL success
-    console.log("Attempting final actions/POST..");
+    console.log("Attempting final actions/POST before logging in..");
 
     // Create dummy form and submit
     try {
-        // Create dummy form and submit
+        // Create dummy login form and submit
+        // a) Form with portal action
         var submit_form = document.createElement('form');
         submit_form.method = 'POST';
         submit_form.class = 'hideMe';
         submit_form.action = PortalAction; // Obtained from $PORTAL_ACTION$ temp element
         submit_form.display =  'hidden';
 
-        // redirurl
+        // b) redirurl input
         var input_redirurl = document.createElement('input');
         input_redirurl.name = 'redirurl';
         input_redirurl.class = 'hideMe';
         input_redirurl.type = 'HIDDEN';
         input_redirurl.value = RedirURL; // Obtained from $PORTAL_REDIRURL$ temp element
+        //input_redirurl.value = ''; // Obtained from $PORTAL_REDIRURL$ temp element
         submit_form.appendChild(input_redirurl);
 
-        // auth_user
+        // c) auth_user input
         var input_auth_user = document.createElement('input');
         input_auth_user.name = 'auth_user';
         input_auth_user.class = 'hideMe';
@@ -169,29 +188,47 @@ function loginCPortal() {
         input_auth_user.value = User; // Obtained from 'auth_user2' form value
         submit_form.appendChild(input_auth_user);
 
-        // test
-        var input_test = document.createElement('test');
-        input_test.name = 'test';
-        input_test.class = 'hideMe';
-        input_test.type = 'HIDDEN';
-        input_test.value = 'test123';
-        submit_form.appendChild(input_test);
-
-        // submit btn
+        // d) accept submit btn
         var btnSubmit = document.createElement('input');
         btnSubmit.name = 'accept';
-        input_redirurl.class = 'hideMe';
+        btnSubmit.class = 'hideMe';
         btnSubmit.id = 'accept';
-        input_redirurl.type = 'HIDDEN';
         btnSubmit.type = 'SUBMIT';
         btnSubmit.value = 'accept';
         submit_form.appendChild(btnSubmit);
 
-        // Add to form and submit
+        // Add form to body >> submit to login
         document.body.appendChild(submit_form);
         $( '#accept' ).click()
     }
     catch(e) {
         setError("POST (loginCPortal)", "Unknown POST Error");
     }
+}
+
+// REGISTER (login @ top)#########################################################################################
+// 1: Register button was pressed
+function tryRegister() {
+    // TODO
+    showRegister();
+    validateRegister();
+}
+
+function showRegister(){
+    // TODO
+}
+
+function validateRegister() {
+    // TODO
+}
+
+function sendToSL() {
+    // TODO
+    // TODO: Also add to restquery.php to expect this
+    finalizeRegistration();
+}
+
+function finalizeRegistration() {
+    // TODO
+    // Fill in username from POST
 }
