@@ -3,7 +3,7 @@
 	<head>
         <!--
         ############################################################################################################
-        # Created by Dylan Hunt @ Smartlaunch on 2/15/2015
+        # Created by Dylan Hunt @ Smartlaunch on 2/15/2015 v2
         # captiveportal-login-logout.php
         #########################################################################################################-->
         <title>Smartlaunch WiFi</title>
@@ -25,35 +25,36 @@
         <script src="captiveportal-jquery-ui.js"></script>
 
         <!-- Smartlaunch Scripts ---------------------------------------------------------------------------------->
-        <script type="text/javascript" charset="utf-8" src="captiveportal-sl_ip.js"></script>
-        <script>
-            // Initialization -- LOGOUT or LOGIN?
+        <script type="text/javascript" charset="utf-8" src="captiveportal-sl_ip.js"></script><?php
 
-            <?php
-            // Determine if LOGIN or LOGOUT by sessionid existing or not
-            if (!isset($sessionid)) {
-                echo '
-                // Login page
-                $.getScript("captiveportal-login.js", function(){
-                    console.log("Login scripts loaded and executed.");
-                });';
-            } else {
-                echo '
-                // Logout page
-                $.getScript("captiveportal-logout.js", function(){
-                    console.log("Logout scripts loaded and executed.");
-                });';
-            }
-            ?>
-        </script>
+        if (!isset($sessionid)) {
+        echo '
+        <script type="text/javascript" charset="utf-8" src="captiveportal-login.js"></script>';
+        echo '
+        <script>';
+        echo '  var sid = "";';
+        echo '
+        </script>';
+    } else {
+        echo '
+        <script type="text/javascript" charset="utf-8" src="captiveportal-logout.js"></script>';
+        echo '
+        <script>';
+        echo "  var sid = \"$sessionid\";";
+        echo '
+        </script>';
+    }
+
+        ?>
+
 	</head>
 	<body>
 	<!-- Wrapper ================================================================================================-->
 		<div id="wrapper">
 
 			<!-- Login below -------------------------------------------------------------------------------------->
-			<section class="loginform cf" id="loginform">
-                <form name="login" id="login">
+			<section class="loginform cf" id="loginformsection">
+                <form name="login" id="loginform">
                     <div id="tos">
                         <h3>By signing in, you are agreeing with our TOS</h3>
                         <p>
@@ -82,16 +83,16 @@
                             <br><br>
                         </li>
                         <li>
-                            <div class="remove">
-                                <input name="redirurl2" id="redirurl" type="hidden" value="$PORTAL_REDIRURL$">
-                                <input name="portalaction2" id="portalaction" type="hidden" value="$PORTAL_ACTION$">
-                                <input name="clientmac" id="clientmac" type="hidden" value="$CLIENT_MAC$">
-                                <input name="clientip" id="clientip" type="hidden" value="$CLIENT_IP$">
-                                <input name="logouturl2" id="logouturl2" type="hidden" value="?=$logouturl;?">
+                            <div class="removeMe">
+                                <input name="redirurl2"     id="redirurl"       type="hidden" value="$PORTAL_REDIRURL$">
+                                <input name="portalaction2" id="portalaction"   type="hidden" value="$PORTAL_ACTION$">
+                                <input name="clientmac"     id="clientmac"      type="hidden" value="$CLIENT_MAC$">
+                                <input name="clientip"      id="clientip"       type="hidden" value="$CLIENT_IP$">
+                                <input name="logouturl2"    id="logouturl2"     type="hidden" value="?=$logouturl;?">
                             </div>
-                            <input name="logouturl" id="logouturl" type="hidden" value="$PORTAL_ACTION$">
-                            <input name="accept2" id="accept2" type="button" value="continue" onclick="tryLogin()">
-                            <input name="accept2" id="accept2" type="button" value="continue" onclick="tryRegister()">
+                            <input name="logouturl" id="logouturl"  type="hidden" value="$PORTAL_ACTION$">
+                            <input name="accept2"   id="accept2"    type="button" value="Login WiFi"    onclick="tryLogin()">
+                            <input name="register"  id="register"   type="button" value="Register"      onclick="tryRegister()">
                         </li>
                     </ul>
                 </form>
@@ -99,22 +100,23 @@
             <!-- /Login -->
 
 			<!-- Logout below ------------------------------------------------------------------------------------->
-			<section class="logoutform cf" id="logoutform">
-				<form name="logout2" id="logout2" method="POST" action="<?=$logouturl;?>">
-					<INPUT name="logout_id2" id="logout_id2" type="hidden" value="<?=$sessionid;?>">
-					<INPUT name="zone2" id="zone2" type="hidden" value="<?=$cpzone;?>">
-					<INPUT name="logout2" id="zone2" type="button" value="Logout (js)" onclick="tryLogout()">
+			<section class="logoutform cf"      id="logoutsection">
+				<form name="logoutform2"        id="logoutform2" method="POST" action="<?=$logouturl;?>">
+					<input name="logout_id2"    id="logout_id2" type="hidden" value="<?=$sessionid;?>">
+					<input name="zone2"         id="zone2"      type="hidden" value="<?=$cpzone;?>">
+					<input name="logout2"       id="logout2"    type="button" value="Logout (js)" onclick="tryLogout()">
 				</form>
 			</section>
             <!-- /Logout -->
 
             <!-- DUMMY Logout below ------------------------------------------------------------------------------->
             <!-- Delete before release -->
-            <section class="logoutform cf dummy" id="logoutform">
-                <form name="logout2" id="logout" method="POST" action="<?=$logouturl;?>">
-                    <INPUT name="logout_id" id="logout_id2" type="hidden" value="<?=$sessionid;?>">
-                    <INPUT name="zone" id="zone2" type="hidden" value="<?=$cpzone;?>">
-                    <INPUT name="logout" id="zone2" type="submit" value="Logout (orig)">
+            <section class="logoutform cf dummy" id="logoutdummysection">
+                <form name="dummylogoutform"     id="dummylogoutform"   method="POST" action="<?=$logouturl;?>">
+                    <input name="logout_id"      id="logout_id"         type="hidden" value="<?=$sessionid;?>">
+                    <input name="zone"           id="zone"              type="hidden" value="<?=$cpzone;?>">
+                    <input name="username"       id="username"          type="hidden" value="<?=$username;?>">
+                    <input name="logout"         id="logout"            type="submit" value="Logout (orig)">
                 </form>
             </section>
             <!-- /Logout -->

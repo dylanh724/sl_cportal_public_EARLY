@@ -1,5 +1,5 @@
 /**
- * captiveportal-login.js
+ * captiveportal-login.js v2
  * Created by Dylan Hunt @ Smartlaunch on 2/15/2015.
  */
 // LOGIN (Register @ bottom) #####################################################################################
@@ -39,17 +39,14 @@ $(document).ready(function() {
     PortalAction = document.getElementById('portalaction').value;
     //alert(PortalAction);
 
-    // d) Remove b) & c) code from html since it's no longer needed (don't want end-user to see it)
-    $( '.remove' ).remove();
-
-    // e) <ENTER> event
+    // d) <ENTER> event
     $( '#auth_pass', '#auth_voucher' ).keyup(function(event){
         if(event.keyCode == 13){
             $( '#accept2' ).click();
         }
     });
 
-    // f) TOS accordion by ID
+    // e) TOS accordion by ID
     $(function() {
         $( "#tos" ).accordion({
             collapsible: true,
@@ -57,7 +54,13 @@ $(document).ready(function() {
         });
     });
 
-// End init
+    // f) Set title
+    document.title = "Smartlaunch WiFi - Login";
+
+    // g) Ready
+    console.log("Login scripts loaded and executed");
+
+// ^^ End init ^^
 });
 
 // 3: Main: Button just clicked>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -121,11 +124,20 @@ function SendAjaxPOST(request) {
         //dataType: 'json',
         cache: false,
         success: function (data) {
-            //alert(data);
-            var JSONdata = JSON.parse(data);
-            var login = JSONdata[0];
-            var msg = JSONdata[1];
-			finalValidate(login, msg);
+            alert(JSON.parse(data).FailReason);
+            //var JSONData = JSON.parse(data);
+
+            // Testing JSON formats
+            //alert("freason: " + JSONData.FailReason);
+            //alert("data: " + data);
+            //alert("data.FailReason: " + data.FailReason);
+            //alert("JSON.stringify: " + JSON.stringify(data));
+            //alert("JSON.parse: " + JSON.parse(data));
+
+
+            //var login = JSONData[0];
+            //var msg = JSONData[1];
+			//finalValidate(login, msg);
         }
     });
 }
@@ -210,6 +222,7 @@ function loginCPortal() {
 // 1: Register button was pressed
 function tryRegister() {
     // TODO
+    alert("TODO");
     showRegister();
     validateRegister();
 }

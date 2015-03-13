@@ -1,6 +1,6 @@
 /**
  * Created by Dylan Hunt @ Smartlaunch on 3/08/2015.
- * captiveportal-logout.js
+ * captiveportal-logout.js v2.1
  */
 
 // 0: Error catching >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -22,7 +22,7 @@ var Prefix = "http://";                                     // ## EXAMPLES ##
 var ServerIP = server[0];                                   // local IP; 192.168.0.25
 var ServerPort = server[1];                                 // RESTful port; 8080
 var ServerAddress = Prefix + ServerIP + ":" + ServerPort;   // http://192.168.0.25:8080
-var User = "";                                              // <?=$username;?> @ #username
+var Username = "";                                          // <?=$username;?> @ #username
 var LogoutURL = "";                                         // <?=$logouturl;?> @ #logout
 var LogoutID = "";                                          // <?=$sessionid;?> (hash) @ #logout_id (or $sessionid)
 var Zone = "";                                              // <?=$cpzone;?> (smartlaunch) @ #zone
@@ -30,55 +30,59 @@ var Zone = "";                                              // <?=$cpzone;?> (sm
 // 2: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $(document).ready(function() {
     // a) Fade in
-    $('#wrapper').fadeIn(1200);
+    $( '#wrapper' ).fadeIn(1200);
 
-    // b) Update logout_URL (after PHP swaps values)
-    LogoutURL = document.logout.action;
-    alert("LogoutURL: " + LogoutURL);
+    // b) Update LogoutURL (after PHP swaps values)
+    LogoutURL = document.getElementById( 'logoutform2' ).action;
 
-    // c) Update logoutURL (after PHP swaps values)
+    // c) Update LogoutID (LogoutID) (after PHP swaps values)
     LogoutID = document.getElementById( 'logout_id' ).value;
-    alert("LogoutID:" + LogoutID);
+    alert( 'LogoutID: ' + LogoutID );
 
     // d) Update Zone (after PHP swaps values)
-    Zone = document.getElementById( 'zone' );
-    alert("Zone:" + Zone);
+    Zone = document.getElementById( 'zone' ).value;
+    alert( 'Zone: ' + Zone );
 
     // e) Update User
-    var Username = $username;
-    alert("Username:" + Username);
+    Username = document.getElementById( 'username' ).value;
+    alert( 'Username: ' + Username );
 
-    // f) Hide login elements
+    // f) Hide login elements (since we only need logout)
     $( '.loginform' ).remove();
 
-    // g) Remove #X from html since it's no longer needed
-    //$( '.remove' ).remove();
-
-    // h) Send info to Smartlaunch
+    // g) Send info to Smartlaunch
     // TODO
+
+    // h) Set title
+    document.title = "Smartlaunch WiFi - Logout";
+
+    // i) Ready
+    console.log("Login scripts loaded and executed");
+
+// ^^ End Init ^^
 });
 
 // 3: Main: Button just clicked>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function tryLogout() {
     // TODO
-    User = document.getElementById( 'auth_user2' ).value;
-    var pass = document.getElementById( 'auth_pass' ).value;
-
-   loginSL(pass);
+    alert('trying to logout');
+    logoutSL();
 }
 
 // 4: Disconnect: Logout from SL >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-function loginSL(pass) {
-    // PHP:  http://localhost:8080/users/dylan/logout
-    // REST: http://localhost:8080/users/dylan/logout
-    console.log("User '" + User + "' attempting SL login @ " + ServerAddress + "..");
-    console.log("Attempting GET (Boolean) >> " + ServerAddress + "/cportal/login?username=" + User + "&password=***");
-    var request = "cportal/login&username=" + User + "&password=" + pass;
+function logoutSL() {
+    // PHP:  http://localhost:8080?username=dylan&logout=true
+    // REST: http://localhost:8080/cportal/username=dylan&logout=true
+    alert("Trying to logoutSL");
+    console.log("User '" + User + "' attempting SL logout @ " + ServerAddress + "..");
+    console.log("Attempting GET (Boolean) >> " + ServerAddress + "/users/" + Username + "/logout");
+    var request = "users/" + Username + "/logout";
     SendAjaxPOST(request);
 }
 
 // 5: Get RESTful data via cross-domain ajax via PHP (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function SendAjaxPOST(request) {
+    alert("Trying to SendAjaxPOST");
     // captiveportal-restquery.php?resturl=http://192.168.0.25:7833/cportal/login&username=dylan&password=asdf
     var baseURL = "captiveportal-restquery.php?resturl=" + ServerAddress + "/";
     var completeURL = baseURL + request;
@@ -101,6 +105,7 @@ function SendAjaxPOST(request) {
 
 // 6: Final logout validation: True/False? >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function finalValidate(logout, msg) {
+    alert("Trying to finalValidate");
     if (logout) {
         // Logout Successful - logout now
         logoutCPortal();
