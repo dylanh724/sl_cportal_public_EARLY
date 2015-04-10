@@ -1,6 +1,7 @@
 /**
  * Created by Dylan Hunt @ Smartlaunch on 3/08/2015.
- * captiveportal-logout.js v2.1
+ * ALTERED 4/10/2015 to support 1.0.2x86
+ * captiveportal-logout.js
  */
 
 // 0: Error catching >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -20,8 +21,8 @@ function setError(e, msg) {
 // 1: Globals >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var Prefix = "http://";                                     // ## EXAMPLES ##
 var ServerIP = server[0];                                   // local IP; 192.168.0.25
-var ServerPort = server[1];                                 // RESTful port; 8080
-var ServerAddress = Prefix + ServerIP + ":" + ServerPort;   // http://192.168.0.25:8080
+var ServerPort = server[1];                                 // RESTful port; 7833
+var ServerAddress = Prefix + ServerIP + ":" + ServerPort;   // http://192.168.0.25:7833
 var Username = "";                                          // <?=$username;?> @ #username
 var LogoutURL = "";                                         // <?=$logouturl;?> @ #logout
 var LogoutID = "";                                          // <?=$sessionid;?> (hash) @ #logout_id (or $sessionid)
@@ -33,24 +34,25 @@ $(document).ready(function() {
     $( '#wrapper' ).fadeIn(1200);
 
     // b) Update LogoutURL (after PHP swaps values)
-    LogoutURL = document.getElementById( 'logoutform2' ).action;
+    //LogoutURL = document.getElementById( 'logoutform2' ).action;
+    LogoutURL = $( '#logoutform2' ).attr( 'action' );
 
     // c) Update LogoutID (LogoutID) (after PHP swaps values)
-    LogoutID = document.getElementById( 'logout_id' ).value;
+    LogoutID = $( '#logout_id' ).val();
     alert( 'LogoutID: ' + LogoutID );
 
     // d) Update Zone (after PHP swaps values)
-    Zone = document.getElementById( 'zone' ).value;
+    Zone = $( '#zone' ).val();
     alert( 'Zone: ' + Zone );
 
     // e) Update User
-    Username = document.getElementById( 'username' ).value;
+    Username = $( '#username' ).value;
     alert( 'Username: ' + Username );
 
-    // f) Hide login elements (since we only need logout)
-    $( '.loginform' ).remove();
+    // f) HIDE ELEMENTS
+    $( '.loginform, #browserFail' ).remove();
 
-    // g) Send info to Smartlaunch
+    // g) Send info to Smartlaunch (Onload?)
     // TODO
 
     // h) Set title
@@ -75,7 +77,7 @@ function logoutSL() {
     // REST: http://localhost:8080/cportal/username=dylan&logout=true
     alert("Trying to logoutSL");
     console.log("User '" + User + "' attempting SL logout @ " + ServerAddress + "..");
-    console.log("Attempting GET (Boolean) >> " + ServerAddress + "/users/" + Username + "/logout");
+    console.log("Attempting POST (returns bool, str) >> " + ServerAddress + "/users/" + Username + "/logout");
     var request = "users/" + Username + "/logout";
     SendAjaxPOST(request);
 }

@@ -1,6 +1,7 @@
 /**
  * captiveportal-login.js v2
  * Created by Dylan Hunt @ Smartlaunch on 2/15/2015.
+ * ALTERED 4/10/2015 to support 1.0.2x86
  */
 // LOGIN (Register @ bottom) #####################################################################################
 // 0: Error catching >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -20,35 +21,38 @@ function setError(e, msg) {
 // 1: Globals >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var Prefix = "http://";                                     // ## EXAMPLES ##
 var ServerIP = server[0];                                   // local IP; 192.168.0.25
-var ServerPort = server[1];                                 // RESTful port; 8080
-var ServerAddress = Prefix + ServerIP + ":" + ServerPort;   // http://192.168.0.25:8080
+var ServerPort = server[1];                                 // RESTful port; 7833
+var ServerAddress = Prefix + ServerIP + ":" + ServerPort;   // http://192.168.0.25:7833
 var RedirURL = "";                                          // logout.php
 var PortalAction = "";                                      // #
 var User = "";                                              // dylan
+var Clientmac = "";                                         // aa:bb:cc:dd:ee:ff:gg
+var Clientip = "";                                          // 192.168.0.100
+//var Zone = "";                                              // <?=$cpzone;?> (smartlaunch) @ #zone
 
 // 2: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $(document).ready(function() {
     // a) Fade in
-    $('#wrapper').fadeIn(1200);
+    $( '#wrapper' ).fadeIn(1200);
 
     // b) Update redirurl (after PHP swaps values)
-    RedirURL = document.getElementById('redirurl').value;
+    RedirURL = $( '#redirurl' ).val();
     //alert(RedirURL);
 
     // c) Update portal action (after PHP swaps values)
-    PortalAction = document.getElementById('portalaction').value;
+    PortalAction = $( '#portalaction').val();
     //alert(PortalAction);
 
     // d) <ENTER> event
-    $( '#auth_pass', '#auth_voucher' ).keyup(function(event){
-        if(event.keyCode == 13){
+    $( '#auth_user, #auth_pass, #auth_voucher' ).keyup(function (event) {
+        if (event.keyCode == 13) {
             $( '#accept2' ).click();
         }
     });
 
     // e) TOS accordion by ID
-    $(function() {
-        $( "#tos" ).accordion({
+    $(function () {
+        $( '#tos' ).accordion({
             collapsible: true,
             active: false
         });
@@ -57,8 +61,38 @@ $(document).ready(function() {
     // f) Set title
     document.title = "Smartlaunch WiFi - Login";
 
-    // g) Ready
-    console.log("Login scripts loaded and executed");
+    // g) HIDE ELEMENTS
+    $( '.logoutform' ).remove();
+    $( '#browserFail' ).remove();
+
+    // h) Transfer effect
+    $( '#accept2' ).click(function () {
+        // Button is clicked..
+    });
+
+    // i) Get clientmac
+    Clientmac = $( '#clientmac' ).val();
+    //alert("mac: " + Clientmac);
+
+    // j) Get clientip
+    Clientip = $( '#clientip' ).val();
+    //alert("ip: " + Clientip);
+
+    // k) Get zone
+    //Zone = $( '#zone' ).val();
+    //alert("zone: " + Zone);
+
+    // l) Enable tooltips
+    $(function () {
+        $(document).tooltip();
+    });
+
+    // m) Focus 1st input field
+    $( 'input:text:visible:first' ).focus();
+
+    // READY
+    //TODO: Add a $_GET cmd for a 'running!' boolean
+    console.log("Login scripts loaded and executed @ " + ServerAddress);
 
 // ^^ End init ^^
 });
@@ -66,9 +100,9 @@ $(document).ready(function() {
 // 3: Main: Button just clicked>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function tryLogin() {
     // Get User + pass (+voucher) from form
-    User = document.getElementById( 'auth_user2' ).value;
-    var pass = document.getElementById( 'auth_pass' ).value;
-    var voucher = document.getElementById( 'auth_voucher' ).value;
+    User = $( '#auth_user2' ).val();
+    var pass = $( '#auth_pass' ).val();
+    var voucher = $( '#auth_voucher' ).val();
     var voucherLogin = false;
     if (voucher !== "") {
         voucherLogin = true
@@ -104,40 +138,32 @@ function initValidate(_pass, _voucher, _voucherLogin) {
 
 // 5: Success: Finally login the user to SL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function loginSL(pass) {
-    // PHP:  http://localhost:7833/cportal/login&username=dylan&password=asdf
-    // REST: http://localhost:7833/cportal/login?username=dylan&password=asdf
-    console.log("User '" + User + "' attempting SL login @ " + ServerAddress + "..");
-    console.log("Attempting GET (Boolean) >> " + ServerAddress + "/cportal/login?username=" + User + "&password=***");
-    var request = "cportal/login&username=" + User + "&password=" + pass;
+    // PHP:  captiveportal-restquery.php?resturl=http://localhost:7833/cportal/login&username=dylan&password=asdf&clientmac=aa:bb:cc:dd:ee:ff&clientip=192.168.0.100
+    // REST: http://slserver:7833/cportal/login?username=dylan&password=asdf&clientmac=aa:bb:cc:dd:ee:ff&clientip=192.168.0.100
+    console.log("User '" + User + "' (" + Clientmac + ", " + Clientip +  ") attempting SL login @ " + ServerAddress + "..");
+    console.log("Attempting GET (Boolean) >> " + ServerAddress + "/cportal/login?username=" + User + "&password=***&clientmac=" + Clientmac + "&clientip=" + Clientip);
+    var request = "cportal/login&username=" + User + "&password=" + pass + "&clientmac=" + Clientmac + "&clientip=" + Clientip;
     SendAjaxPOST(request);
 }
 
 // 6: Get RESTful data via cross-domain ajax via PHP (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function SendAjaxPOST(request) {
-    // captiveportal-restquery.php?resturl=http://192.168.0.25:7833/cportal/login&username=dylan&password=asdf
+    // captiveportal-restquery.php?resturl=http://192.168.0.25:7833/cportal/
+    // login&username=dylan&password=asdf&clientmac=C4:6E:1F:04:9B:29&clientip=192.168.0.25
     var baseURL = "captiveportal-restquery.php?resturl=" + ServerAddress + "/";
     var completeURL = baseURL + request;
-	//console.log(completeURL); //PHP URL
+	console.log(completeURL); //PHP URL; shows plaintext password! Comment out before release
     $.ajax({
         url: completeURL,
         type: 'POST',
         //dataType: 'json',
         cache: false,
         success: function (data) {
-            alert(JSON.parse(data).FailReason);
-            //var JSONData = JSON.parse(data);
-
-            // Testing JSON formats
-            //alert("freason: " + JSONData.FailReason);
-            //alert("data: " + data);
-            //alert("data.FailReason: " + data.FailReason);
-            //alert("JSON.stringify: " + JSON.stringify(data));
-            //alert("JSON.parse: " + JSON.parse(data));
-
-
-            //var login = JSONData[0];
-            //var msg = JSONData[1];
-			//finalValidate(login, msg);
+            var JSONData = JSON.parse(data);
+            var login = JSONData.ReturnSuccess;
+            var msg = JSONData.FailReason;
+            //alert(msg);
+            finalValidate(login, msg);
         }
     });
 }
@@ -155,12 +181,12 @@ function finalValidate(login, msg) {
         loginCPortal();
     } else if (!login) {
         // Login Failed - show fancy alert
-        $(' <div id="dialog" title="Failed Login"><span id="msg"></span></div>').dialog({
+        $(' <div id="dialog" title="Failed Login"><span class="msg"></span></div>').dialog({
             modal: true,
             draggable: false,
             resizable: false
         });
-        $(' #msg ').html(msg);
+        $(' .msg ').html(msg);
         console.log("SL Server Login Fail Reason: " + msg);
     } else {
         alert("Unknown error during final login validation");
@@ -222,7 +248,8 @@ function loginCPortal() {
 // 1: Register button was pressed
 function tryRegister() {
     // TODO
-    alert("TODO");
+    $( '#register' ).tooltip({ items: "#register", content: "Coming Soon!"});
+    $( '#register' ).tooltip("open");
     showRegister();
     validateRegister();
 }

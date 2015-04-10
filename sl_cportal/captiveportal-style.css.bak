@@ -6,8 +6,7 @@
 /* GENERAL */
 html
 {
-	background: url(captiveportal-mainbg2.jpg) no-repeat fixed center /* 400x400 */;
-	/*url(bg6.jpg); /* 1920x1080 low-q-for-web */
+	background: url(captiveportal-logon.png) no-repeat fixed center; /* 400x400 */
 }
 html, body, td, th, input, select {
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
@@ -27,15 +26,6 @@ label
 	font-weight: bold;
 	font-family: Frutiger, Lucida Grande, Lucida Sans, Arial, sans-serif; /* Frutiger font is like Windows10 */
 	text-align: center;
-}
-#browserFail
-{
-	color: white;
-	text-align: center;
-	position: absolute;
-	margin-left: -12.5em;
-	top: 50%;
-	left: 50%;
 }
 
 /* LOGOUT FORM */
@@ -97,40 +87,24 @@ label
 }
 
 /* LOGIN FORM */
-/* Placeholder (watermark) for input >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
-::-webkit-input-placeholder {
-	text-align: center;
-}
-
-:-moz-placeholder { /* Firefox 18- */
-	text-align: center;
-}
-
-::-moz-placeholder {  /* Firefox 19+ */
-	text-align: center;
-}
-
-:-ms-input-placeholder {
-	text-align: center;
-}
-/* /Placeholder (watermark) for input <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 #loginformsection
 {
-	/* Placeholder */
+
 }
 .loginform
 {
-	position: absolute;					/* Moves form to center */
-	top: 50%;							/* Moves form to center */
-	left: 50%;							/* Moves form to center */
+	position: absolute;
+	top: 50%;
+	left: 50%;
 	transform: translate(-50%, -50%);	/* Moves form to center */
-	margin-left: -18px; 				/* Centers form */
-	margin-top: -10px;					/* Moves form up slightly after centered */
-	font-size: medium;					/* Larger txt than avg */
+	margin-left: -20px; 				/* Centers form */
+	font-size: medium;
 }
 .loginform ul {
 	list-style-type: none; 				/* Removes bullets */
+	margin-top: 115px; 					/* Centers form vertically */
 }
+
 input
 {
 	background-color: white; 			/* Prevents blending into bg */
@@ -138,22 +112,16 @@ input
 /* BUTTONS */
 #accept2, #register
 {
-	margin: 0 auto;						/* Centers */
-	margin-top: 10px;					/* Puts space in between elements
-	/*min-width: 100px;					/* Makes same size */
+	margin-top: 15px;
+	margin-left: 20px;
+	min-width: 100px;					/* Makes same size */
+
 	color: #fff;						/* White */
-	border: 1px solid rgba(0, 0, 0, .3);/* Looks flatter */
-	/*border-radius: 3px;*/				/* Cornered edges */
+	border: 1px solid rgba(0, 0, 0, .3);
+	border-radius: 3px;					/* Cornered edges */
 	background: #64c8ef; 				/* Old browsers */
-}
-#register
-{
-	float: right;
-	margin-right: 5px;
-}
-#accept2
-{
-	min-width: 95px;
+
+	display: table;
 }
 #accept2:hover
 {
@@ -206,8 +174,7 @@ input
 /* TOS ACCORDION */
 #tos
 {
-	margin-top: 1em;
-	position: static;
+	/* max-width: 400px; */
 }
 #tos h3
 {
@@ -219,10 +186,11 @@ input
 {
 	font-size: 0.8em;
 	font-weight: normal;
-	text-align: left;
+	text-align: center;
 }
 #tos .ui-accordion-content
 {
+	background-color: blue;
 	color: gray;
 	line-height: 16pt;
 }
