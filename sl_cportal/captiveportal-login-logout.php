@@ -8,48 +8,50 @@
         # captiveportal-login-logout.php
         #########################################################################################################-->
         <title>Smartlaunch WiFi</title>
+            <!-- Favicon 196x196 -------------------------------------------------------------------------------------->
+            <link rel="icon" href="captiveportal-favicon.png">
 
-        <!-- Favicon 196x196 -------------------------------------------------------------------------------------->
-        <link rel="icon" href="captiveportal-favicon.png">
+            <!-- jQuery-UI Style -------------------------------------------------------------------------------------->
+            <link rel="stylesheet" href="captiveportal-jquery-ui.css">
 
-        <!-- jQuery-UI Style -------------------------------------------------------------------------------------->
-        <link rel="stylesheet" href="captiveportal-jquery-ui.css">
+            <!-- Main Style ------------------------------------------------------------------------------------------->
+            <link type="text/css" rel="stylesheet" href="captiveportal-normalize.css">
+            <link type="text/css" rel="stylesheet" href="captiveportal-style.css">
 
-        <!-- Main Style ------------------------------------------------------------------------------------------->
-        <link type="text/css" rel="stylesheet" href="captiveportal-normalize.css">
-        <link type="text/css" rel="stylesheet" href="captiveportal-style.css">
+            <!-- jQuery Scripts --------------------------------------------------------------------------------------->
+            <script src="captiveportal-jquery-2.1.3.js"></script>
 
-        <!-- jQuery Scripts --------------------------------------------------------------------------------------->
-        <script src="captiveportal-jquery-2.1.3.js"></script>
+            <!-- jQuery-UI Scripts ------------------------------------------------------------------------------------>
+            <script src="captiveportal-jquery-ui.js"></script>
 
-        <!-- jQuery-UI Scripts ------------------------------------------------------------------------------------>
-        <script src="captiveportal-jquery-ui.js"></script>
+            <!-- Smartlaunch Scripts ---------------------------------------------------------------------------------->
+            <script type="text/javascript" charset="utf-8" src="captiveportal-sl_ip.js"></script><?php
 
-        <!-- Smartlaunch Scripts ---------------------------------------------------------------------------------->
-        <script type="text/javascript" charset="utf-8" src="captiveportal-sl_ip.js"></script><?php
+            if (!isset($sessionid)) {
+            echo '
+            <script type="text/javascript" charset="utf-8" src="captiveportal-login.js"></script>';
+            echo '
+            <script>';
+            echo '  var sid = "";';
+            echo '
+            </script>';
+        } else {
+            echo '
+            <script type="text/javascript" charset="utf-8" src="captiveportal-logout.js"></script>';
+            echo '
+            <script>';
+            echo "  var sid = \"$sessionid\";";
+            echo '
+            </script>';
+        }
 
-        if (!isset($sessionid)) {
-        echo '
-        <script type="text/javascript" charset="utf-8" src="captiveportal-login.js"></script>';
-        echo '
-        <script>';
-        echo '  var sid = "";';
-        echo '
-        </script>';
-    } else {
-        echo '
-        <script type="text/javascript" charset="utf-8" src="captiveportal-logout.js"></script>';
-        echo '
-        <script>';
-        echo "  var sid = \"$sessionid\";";
-        echo '
-        </script>';
-    }
-
-        ?>
-        <script language="text/javascript">
-        // Room for later
-        </script>
+            ?>
+            <script language="text/javascript">
+            // Extra js here
+            </script>
+        <style>
+            // Override css here
+        </style>
 	</head>
 	<body>
 	<span id="browserFail"><h3>Your browser does not support Javascript:
@@ -74,11 +76,15 @@
                     <!-- TODO: Add a comment about HTTPS encryption -->
                 </p>
             </div>
+
 			<!-- Login below -------------------------------------------------------------------------------------->
 			<section class="loginform cf" id="loginformsection">
                 <form name="login" id="loginform">
-                    <br>
                     <ul>
+                        <li>
+                            <img src="captiveportal-logo.png" id="logo">
+                        </li>
+                        <br>
                         <li>
                             <input id="auth_user2" name="auth_user" type="text" placeholder="SL Username" required="true">
                             <br><br>
@@ -88,7 +94,7 @@
                             <br><br>
                         </li>
                         <li>
-                            <input id="auth_voucher" name="auth_voucher" type="text" Placeholder="Ticket #">
+                            <input id="auth_voucher" name="auth_voucher" type="text" Placeholder="Optional Ticket #">
                         </li>
                         <li>
                             <div class="removeMe">
@@ -101,6 +107,8 @@
                             <input name="logouturl" id="logouturl"  type="hidden" value="$PORTAL_ACTION$">
                             <input name="accept2"   id="accept2"    type="button" value="Login WiFi"    onclick="tryLogin()">
                             <input name="register"  id="register"   type="button" value="Register"      onclick="tryRegister()">
+                            <br><br>
+                            <span id="help"><a href='javascript:tryRequestAssistance()'>:: Request Assistance ::</a></span>
                         </li>
                     </ul>
                 </form>
@@ -111,6 +119,8 @@
 			<!-- Logout below ------------------------------------------------------------------------------------->
 			<section class="logoutform cf"      id="logoutsection">
 				<form name="logoutform2"        id="logoutform2" method="POST" action="$logouturl;?>">
+				    <img src="captiveportal-logo.png" id="logo">
+				    <br><br>
 					<input name="logout_id2"    id="logout_id2" type="hidden" value="$sessionid;?>">
 					<input name="zone2"         id="zone2"      type="hidden" value="$cpzone;?>">
                     <input name="username"      id="username"   type="hidden" value="$username;?>">

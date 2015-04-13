@@ -18,6 +18,27 @@ function setError(e, msg) {
     // Trigger error
     $.error(msg + " @ " + e);
 }
+
+function setTooltip(id, content) {
+    $( id ).tooltip({ items: id, content: content});
+    $( id ).tooltip("open");
+}
+
+function isSLOnlineAndReachable() {
+    var completeURL = ServerAddress + "/smartlaunchversion";
+    alert(completeURL);
+    $.ajax({
+        url: completeURL,
+        type: 'POST',
+        //dataType: 'json',
+        cache: false,
+        success: function (data) {
+            var JSONdata = JSON.parse(data);
+            alert(JSONdata.ServerVersion);
+        }
+    });
+}
+
 // 1: Globals >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var Prefix = "http://";                                     // ## EXAMPLES ##
 var ServerIP = server[0];                                   // local IP; 192.168.0.25
@@ -28,10 +49,21 @@ var PortalAction = "";                                      // #
 var User = "";                                              // dylan
 var Clientmac = "";                                         // aa:bb:cc:dd:ee:ff:gg
 var Clientip = "";                                          // 192.168.0.100
-//var Zone = "";                                              // <?=$cpzone;?> (smartlaunch) @ #zone
+var Viewport = "";                                          // .width, .height
+//var Zone = "";                                            // <?=$cpzone;?> (smartlaunch) @ #zone
 
 // 2: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $(document).ready(function() {
+    // Detect if portrait; flip wallpaper
+    Viewport = {
+        width  : $(window).width(),
+        height : $(window).height()
+    };
+
+    if (Viewport.height < Viewport.width) {
+        //$( '#wrapper' ).css('background', 'none');
+    }
+
     // a) Fade in
     $( '#wrapper' ).fadeIn(1200);
 
@@ -90,8 +122,26 @@ $(document).ready(function() {
     // m) Focus 1st input field
     $( 'input:text:visible:first' ).focus();
 
+    // n) Select all text when focus
+    $("input[type='text']").click(function () {
+        $(this).select();
+    });
+
+    // o) Hover over/out the form
+    $("#loginformsection").hover(
+        function() {
+            // IN - Swap image
+            $("#logo").attr('src', "captiveportal-logo-glow.png").fadeIn(400);
+    },
+        function() {
+            // OUT - Swap image
+            $("#logo").attr('src', "captiveportal-logo.png");
+    });
+
+    // p) Is SL reachable/online?
+    isSLOnlineAndReachable();
+
     // READY
-    //TODO: Add a $_GET cmd for a 'running!' boolean
     console.log("Login scripts loaded and executed @ " + ServerAddress);
 
 // ^^ End init ^^
@@ -244,12 +294,11 @@ function loginCPortal() {
     }
 }
 
-// REGISTER (login @ top)#########################################################################################
+// REGISTER (login @ top) #########################################################################################
 // 1: Register button was pressed
 function tryRegister() {
-    // TODO
-    $( '#register' ).tooltip({ items: "#register", content: "Coming Soon!"});
-    $( '#register' ).tooltip("open");
+    //
+    setTooltip("#register", "Coming Soon");
     showRegister();
     validateRegister();
 }
@@ -271,4 +320,11 @@ function sendToSL() {
 function finalizeRegistration() {
     // TODO
     // Fill in username from POST
+}
+
+// REQUEST ASSISTANCE ##############################################################################################
+// 1: User clicks 'request assistance' link at bottom
+function tryRequestAssistance() {
+    //
+    setTooltip("#help", "Coming Soon!");
 }

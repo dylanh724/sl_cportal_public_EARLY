@@ -18,6 +18,22 @@ function setError(e, msg) {
     // Trigger error
     $.error(msg + " @ " + e);
 }
+
+function isSLOnlineAndReachable() {
+    var completeURL = ServerAddress + "/smartlaunchversion";
+    alert(completeURL);
+    $.ajax({
+        url: completeURL,
+        type: 'POST',
+        //dataType: 'json',
+        cache: false,
+        success: function (data) {
+            var JSONdata = JSON.parse(data);
+            alert(JSONdata.ServerVersion);
+        }
+    });
+}
+
 // 1: Globals >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 var Prefix = "http://";                                     // ## EXAMPLES ##
 var ServerIP = server[0];                                   // local IP; 192.168.0.25
@@ -26,10 +42,21 @@ var ServerAddress = Prefix + ServerIP + ":" + ServerPort;   // http://192.168.0.
 var Username = "";                                          // <?=$username;?> @ #username
 var LogoutURL = "";                                         // <?=$logouturl;?> @ #logout
 var LogoutID = "";                                          // <?=$sessionid;?> (hash) @ #logout_id (or $sessionid)
+var Viewport = "";                                          // .width, .height
 var Zone = "";                                              // <?=$cpzone;?> (smartlaunch) @ #zone
 
 // 2: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $(document).ready(function() {
+    // Detect if portrait; flip wallpaper
+    Viewport = {
+        width  : $(window).width(),
+        height : $(window).height()
+    };
+
+    if (Viewport.height < Viewport.width) {
+        //$( '#wrapper' ).css('background', 'none');
+    }
+
     // a) Fade in
     $( '#wrapper' ).fadeIn(1200);
 
@@ -58,8 +85,27 @@ $(document).ready(function() {
     // h) Set title
     document.title = "Smartlaunch WiFi - Logout";
 
+    // i) Enable tooltips
+    $(function () {
+        $(document).tooltip();
+    });
+
+    //// j) Hover over/out the form
+    //$("#logoutformsection").hover(
+    //    function() {
+    //        // IN - Swap image
+    //        $("#logo").attr('src', "captiveportal-logo-glow.png").fadeIn(400);
+    //    },
+    //    function() {
+    //        // OUT - Swap image
+    //        $("#logo").attr('src', "captiveportal-logo.png");
+    //    });
+
+    // k) Is SL reachable/online?
+    //isSLOnlineAndReachable();
+
     // i) Ready
-    console.log("Login scripts loaded and executed");
+    console.log("Login scripts loaded and executed @ " + ServerAddress);
 
 // ^^ End Init ^^
 });

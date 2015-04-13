@@ -6,12 +6,30 @@
 /* GENERAL */
 html
 {
-	background: url(captiveportal-mainbg2.jpg) no-repeat fixed center /* 400x400 */;
-	/*url(bg6.jpg); /* 1920x1080 low-q-for-web */
+
 }
-html, body, td, th, input, select {
+html, body, td, th, input, select, span {
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	font-size: 0.9em;
+	text-align: center;
+	color: darkslategrey;
+}
+a {
+	color: white;
+	text-decoration: none;
+}
+a:hover {
+	color: red;
+}
+body {
+	background: url(captiveportal-mainbg2.jpg) fixed center no-repeat /* 1920x1080 */;
+}
+@media (orientation: portrait) {
+	/* Mobile -- portrait mode */
+	body {
+		background: url(captiveportal-mainbg-portrait.jpg) fixed no-repeat /* 1080x1920 */;
+		background-size: 100%;
+	}
 }
 label
 {
@@ -73,6 +91,9 @@ label
 	background: #64c8ef; 				/* Old browsers */
 
 	display: table;
+}
+#help {
+	color: white;
 }
 
 /* LOGOUT STATUS */
@@ -208,6 +229,7 @@ input
 {
 	margin-top: 1em;
 	position: static;
+	max-width: 1050px;
 }
 #tos h3
 {
