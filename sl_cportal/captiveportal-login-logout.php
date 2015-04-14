@@ -5,6 +5,7 @@
         ############################################################################################################
         # Created by Dylan Hunt @ Smartlaunch on 2/15/2015 v2
         # ALTERED 4/10/2015 to support 1.0.2x86
+        # Updated 4/14/2015
         # captiveportal-login-logout.php
         #########################################################################################################-->
         <title>Smartlaunch WiFi</title>
@@ -84,7 +85,9 @@
                         <li>
                             <img src="captiveportal-logo.png" id="logo">
                         </li>
-                        <br>
+                        <li>
+                            <div id="serverStatus">Server Offline</div>
+                        </li>
                         <li>
                             <input id="auth_user2" name="auth_user" type="text" placeholder="SL Username" required="true">
                             <br><br>
@@ -118,12 +121,12 @@
 
 			<!-- Logout below ------------------------------------------------------------------------------------->
 			<section class="logoutform cf"      id="logoutsection">
-				<form name="logoutform2"        id="logoutform2" method="POST" action="$logouturl;?>">
+				<form name="logoutform2"        id="logoutform2" method="POST" action="<?=$logouturl;?>">
 				    <img src="captiveportal-logo.png" id="logo">
 				    <br><br>
-					<input name="logout_id2"    id="logout_id2" type="hidden" value="$sessionid;?>">
-					<input name="zone2"         id="zone2"      type="hidden" value="$cpzone;?>">
-                    <input name="username"      id="username"   type="hidden" value="$username;?>">
+					<input name="logout_id2"    id="logout_id2" type="hidden" value="<?=$sessionid;?>">
+					<input name="zone2"         id="zone2"      type="hidden" value="<?=$cpzone;?>">
+                    <input name="username"      id="username"   type="hidden" value="<?=$username;?>">
                     <p id="userText">Welcome, <?=$username;?>!</p>
                     <!-- Put timer here ? -->
                     <div class="timeLeft">
@@ -131,7 +134,7 @@
                     <p><input name="status"     id="status"     type="text" placeholder="..." readonly="true" value="Logged In"></p>
 					<input name="logout2"       id="logout2"    type="button" value="Logout WiFi" onclick="tryLogout()">
 					</div>
-					<br><p id="keepOpen">Keep this window open</p>
+					<br><p id="keepOpen">:: Keep This Window Open ::</p>
 				</form>
 			</section>
             <!-- /Logout -->

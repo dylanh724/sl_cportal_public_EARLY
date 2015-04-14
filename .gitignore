@@ -56,3 +56,6 @@ sl_cportal/#Unused, bak, templates, alt/jquery-ui.min.css
 sl_cportal/#Unused, bak, templates, alt/jquery-ui.theme.min.css
 sl_cportal/#Unused, bak, templates, alt/PFS-template.html
 sl_cportal/#Unused, bak, templates, alt/v2.7z
+*.bak
+sl_cportal/.idea/workspace.xml
+sl_cportal/.idea/workspace.xml

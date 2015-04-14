@@ -1,6 +1,7 @@
 /**
  * captiveportal-login.js v2
  * Created by Dylan Hunt @ Smartlaunch on 2/15/2015.
+ * Updated 4/14/2015
  * ALTERED 4/10/2015 to support 1.0.2x86
  */
 // LOGIN (Register @ bottom) #####################################################################################
@@ -9,8 +10,7 @@ $.ajaxSetup({
     // Usually triggered by invalid server IP:Port
     // (or if captiveportal-sl_ip.js not found)
     "error":function() { 
-		console.log("Unknown AJAX Error");
-		alert("Unknown AJAX Error");
+		console.log("Unknown AJAX Error: Server probably offline, or firewall issue for RESTful port");
 	}
 });
 
@@ -26,15 +26,17 @@ function setTooltip(id, content) {
 
 function isSLOnlineAndReachable() {
     var completeURL = ServerAddress + "/smartlaunchversion";
-    alert(completeURL);
-    $.ajax({
-        url: completeURL,
-        type: 'POST',
-        //dataType: 'json',
-        cache: false,
-        success: function (data) {
-            var JSONdata = JSON.parse(data);
-            alert(JSONdata.ServerVersion);
+    console.log(completeURL);
+
+    $.getJSON(completeURL, null, function(result) { // Note crucial ?callback=?
+        var ver = result.ServerVersion;
+        if (ver) {
+            IsServerOnline = true;
+            console.log("SL Server online and reachable, v" + ver);
+
+            // Update server status
+            $( '#serverStatus').css('color', 'green');
+            $( '#serverStatus').html("Server Online");
         }
     });
 }
@@ -44,6 +46,7 @@ var Prefix = "http://";                                     // ## EXAMPLES ##
 var ServerIP = server[0];                                   // local IP; 192.168.0.25
 var ServerPort = server[1];                                 // RESTful port; 7833
 var ServerAddress = Prefix + ServerIP + ":" + ServerPort;   // http://192.168.0.25:7833
+var IsServerOnline = false;                                 // from isSLOnlineAndReachable()
 var RedirURL = "";                                          // logout.php
 var PortalAction = "";                                      // #
 var User = "";                                              // dylan
@@ -149,6 +152,11 @@ $(document).ready(function() {
 
 // 3: Main: Button just clicked>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function tryLogin() {
+    // Server offline?
+    if (!IsServerOnline) {
+        $( '#serverStatus' ).delay(100).fadeOut().fadeIn('slow');
+        // Let the scripts continue for console debugging
+    }
     // Get User + pass (+voucher) from form
     User = $( '#auth_user2' ).val();
     var pass = $( '#auth_pass' ).val();
@@ -188,21 +196,22 @@ function initValidate(_pass, _voucher, _voucherLogin) {
 
 // 5: Success: Finally login the user to SL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function loginSL(pass) {
-    // PHP:  captiveportal-restquery.php?resturl=http://localhost:7833/cportal/login&username=dylan&password=asdf&clientmac=aa:bb:cc:dd:ee:ff&clientip=192.168.0.100
-    // REST: http://slserver:7833/cportal/login?username=dylan&password=asdf&clientmac=aa:bb:cc:dd:ee:ff&clientip=192.168.0.100
+    // JS >> PHP:  captiveportal-restquery.php?resturl=http://localhost:7833/cportal/login&username=dylan&password=asdf&clientmac=aa:bb:cc:dd:ee:ff&clientip=192.168.0.100
+    // PHP >> REST: http://slserver:7833/cportal/login?username=dylan&password=asdf&clientmac=aa:bb:cc:dd:ee:ff&clientip=192.168.0.100
     console.log("User '" + User + "' (" + Clientmac + ", " + Clientip +  ") attempting SL login @ " + ServerAddress + "..");
-    console.log("Attempting GET (Boolean) >> " + ServerAddress + "/cportal/login?username=" + User + "&password=***&clientmac=" + Clientmac + "&clientip=" + Clientip);
+    console.log("Attempting POST (Boolean) >> " + ServerAddress + "/cportal/login?username=" + User + "&password=***&clientmac=" + Clientmac + "&clientip=" + Clientip);
     var request = "cportal/login&username=" + User + "&password=" + pass + "&clientmac=" + Clientmac + "&clientip=" + Clientip;
     SendAjaxPOST(request);
 }
 
-// 6: Get RESTful data via cross-domain ajax via PHP (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 6: POST RESTful data via cross-domain ajax via PHP (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function SendAjaxPOST(request) {
     // captiveportal-restquery.php?resturl=http://192.168.0.25:7833/cportal/
     // login&username=dylan&password=asdf&clientmac=C4:6E:1F:04:9B:29&clientip=192.168.0.25
     var baseURL = "captiveportal-restquery.php?resturl=" + ServerAddress + "/";
     var completeURL = baseURL + request;
-	console.log(completeURL); //PHP URL; shows plaintext password! Comment out before release
+	//console.log(completeURL); //PHP URL; shows plaintext password! Comment out before release
+
     $.ajax({
         url: completeURL,
         type: 'POST',

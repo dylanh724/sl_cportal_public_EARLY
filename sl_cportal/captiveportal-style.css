@@ -1,14 +1,15 @@
 /**
  * Created by Dylan Hunt @ Smartlaunch on 2/10/2015
  * ALTERED 4/10/2015 to support 1.0.2x86
+ * Updated 4/14/2015
  */
 
 /* GENERAL */
 html
 {
-
+	/* Placeholder */
 }
-html, body, td, th, input, select, span {
+html, body, td, th, input, select, #help, #keepOpen, #dc {
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	font-size: 0.9em;
 	text-align: center;
@@ -55,6 +56,11 @@ label
 	top: 50%;
 	left: 50%;
 }
+#serverStatus
+{
+	color: red;
+	margin-bottom: 1em;
+}
 
 /* LOGOUT FORM */
 .logoutform
@@ -67,7 +73,7 @@ label
 }
 #userText
 {
-	margin-top: 100px;
+	/* Placeholder */
 }
 .timeLeft
 {
@@ -78,19 +84,6 @@ label
 	text-align: center;
 	color: white;
 	font-style: italic;
-}
-#logout2
-{
-	margin-top: 15px;
-	margin-left: 60px;
-	min-width: 100px;					/* Makes same size */
-
-	color: #fff;						/* White */
-	border: 1px solid rgba(0, 0, 0, .3);
-	border-radius: 3px;					/* Cornered edges */
-	background: #64c8ef; 				/* Old browsers */
-
-	display: table;
 }
 #help {
 	color: white;
@@ -109,7 +102,8 @@ label
 /* DISCONNECT PAGE */
 #dc
 {
-
+	color: white;
+	font-size: large;
 }
 #dcbg
 {
@@ -157,7 +151,7 @@ input
 	background-color: white; 			/* Prevents blending into bg */
 }
 /* BUTTONS */
-#accept2, #register
+#accept2, #register, #logout2
 {
 	margin: 0 auto;						/* Centers */
 	margin-top: 10px;					/* Puts space in between elements
@@ -166,6 +160,19 @@ input
 	border: 1px solid rgba(0, 0, 0, .3);/* Looks flatter */
 	/*border-radius: 3px;*/				/* Cornered edges */
 	background: #64c8ef; 				/* Old browsers */
+}
+#logout2
+{
+	/*margin-top: 15px;*/
+	/*margin-left: 60px;*/
+	/*min-width: 100px;					*//* Makes same size */
+
+	/*color: #fff;						*//* White */
+	/*border: 1px solid rgba(0, 0, 0, .3);*/
+	/*border-radius: 3px;					*//* Cornered edges */
+	/*background: #64c8ef; 				*//* Old browsers */
+
+	/*display: table;*/
 }
 #register
 {
