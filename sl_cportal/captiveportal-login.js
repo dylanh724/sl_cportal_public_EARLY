@@ -1,8 +1,8 @@
 /**
  * captiveportal-login.js v2
  * Created by Dylan Hunt @ Smartlaunch on 2/15/2015.
- * Updated 4/14/2015
  * ALTERED 4/10/2015 to support 1.0.2x86
+ * Updated 4/15/2015
  */
 // LOGIN (Register @ bottom) #####################################################################################
 // 0: Error catching >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -34,9 +34,15 @@ function isSLOnlineAndReachable() {
             IsServerOnline = true;
             console.log("SL Server online and reachable, v" + ver);
 
-            // Update server status
+            // Success -- Update server status
             $( '#serverStatus').css('color', 'green');
             $( '#serverStatus').html("Server Online");
+
+            // READY
+                console.log("Login scripts loaded and executed @ " + ServerAddress);
+        } else {
+            IsServerOnline = false;
+            console.log("Login scripts LOCAL ONLY, SL Server unreachable @ " + ServerAddress);
         }
     });
 }
@@ -66,26 +72,29 @@ $(document).ready(function() {
     if (Viewport.height < Viewport.width) {
         //$( '#wrapper' ).css('background', 'none');
     }
+    // HIDE ELEMENTS
+    $( '.logoutform' ).remove();
+    $( '#browserFail' ).remove();
 
-    // a) Fade in
+    // Fade in
     $( '#wrapper' ).fadeIn(1200);
 
-    // b) Update redirurl (after PHP swaps values)
+    // Update redirurl (after PHP swaps values)
     RedirURL = $( '#redirurl' ).val();
     //alert(RedirURL);
 
-    // c) Update portal action (after PHP swaps values)
+    // Update portal action (after PHP swaps values)
     PortalAction = $( '#portalaction').val();
     //alert(PortalAction);
 
-    // d) <ENTER> event
+    // <ENTER> event
     $( '#auth_user, #auth_pass, #auth_voucher' ).keyup(function (event) {
         if (event.keyCode == 13) {
             $( '#accept2' ).click();
         }
     });
 
-    // e) TOS accordion by ID
+    // TOS accordion by ID
     $(function () {
         $( '#tos' ).accordion({
             collapsible: true,
@@ -93,44 +102,40 @@ $(document).ready(function() {
         });
     });
 
-    // f) Set title
+    // Set title
     document.title = "Smartlaunch WiFi - Login";
 
-    // g) HIDE ELEMENTS
-    $( '.logoutform' ).remove();
-    $( '#browserFail' ).remove();
-
-    // h) Transfer effect
+    // Transfer effect
     $( '#accept2' ).click(function () {
         // Button is clicked..
     });
 
-    // i) Get clientmac
+    // Get clientmac
     Clientmac = $( '#clientmac' ).val();
     //alert("mac: " + Clientmac);
 
-    // j) Get clientip
+    // Get clientip
     Clientip = $( '#clientip' ).val();
     //alert("ip: " + Clientip);
 
-    // k) Get zone
+    // Get zone
     //Zone = $( '#zone' ).val();
     //alert("zone: " + Zone);
 
-    // l) Enable tooltips
+    // Enable tooltips
     $(function () {
         $(document).tooltip();
     });
 
-    // m) Focus 1st input field
+    // Focus 1st input field
     $( 'input:text:visible:first' ).focus();
 
-    // n) Select all text when focus
+    // Select all text when focus
     $("input[type='text']").click(function () {
         $(this).select();
     });
 
-    // o) Hover over/out the form
+    // Hover over/out the form
     $("#loginformsection").hover(
         function() {
             // IN - Swap image
@@ -141,11 +146,8 @@ $(document).ready(function() {
             $("#logo").attr('src', "captiveportal-logo.png");
     });
 
-    // p) Is SL reachable/online?
+    // Is SL reachable/online?
     isSLOnlineAndReachable();
-
-    // READY
-    console.log("Login scripts loaded and executed @ " + ServerAddress);
 
 // ^^ End init ^^
 });
@@ -201,13 +203,11 @@ function loginSL(pass) {
     console.log("User '" + User + "' (" + Clientmac + ", " + Clientip +  ") attempting SL login @ " + ServerAddress + "..");
     console.log("Attempting POST (Boolean) >> " + ServerAddress + "/cportal/login?username=" + User + "&password=***&clientmac=" + Clientmac + "&clientip=" + Clientip);
     var request = "cportal/login&username=" + User + "&password=" + pass + "&clientmac=" + Clientmac + "&clientip=" + Clientip;
-    SendAjaxPOST(request);
+    SendAjaxPOST(request, true);
 }
 
 // 6: POST RESTful data via cross-domain ajax via PHP (POST) >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-function SendAjaxPOST(request) {
-    // captiveportal-restquery.php?resturl=http://192.168.0.25:7833/cportal/
-    // login&username=dylan&password=asdf&clientmac=C4:6E:1F:04:9B:29&clientip=192.168.0.25
+function SendAjaxPOST(request, loginNow) {
     var baseURL = "captiveportal-restquery.php?resturl=" + ServerAddress + "/";
     var completeURL = baseURL + request;
 	//console.log(completeURL); //PHP URL; shows plaintext password! Comment out before release
@@ -222,7 +222,13 @@ function SendAjaxPOST(request) {
             var login = JSONData.ReturnSuccess;
             var msg = JSONData.FailReason;
             //alert(msg);
-            finalValidate(login, msg);
+
+            if (loginNow) {
+                // Login SL after final validation
+                finalValidate(login, msg);
+            } else {
+                // Placeholder for other AJAX
+            }
         }
     });
 }

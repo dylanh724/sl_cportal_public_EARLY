@@ -4,6 +4,7 @@
 # SMARTLAUNCH--
 # Created by Dylan with special thanks to Edwin
 # ALTERED 4/10/2015 to support 1.0.2x86
+# Updated 4/15/2015
 ##################################################
 
 
@@ -72,6 +73,11 @@ if (isset($_GET["resturl"])) {
         # 3b) $url=http://192.168.0.25:7833/cportal/logout?username=dylan&logout_id={1..2..16}
         } else if (isset($_GET["logout_id"])) {
             $url .= "&logout_id=" . $_GET["logout_id"];
+
+            if (isset($_GET["idonly"])) {
+                // 3c) OPTIONAL $url=http://192.168.0.25:7833/cportal/logout?username=dylan&logout_id={1..2..16}&idonly=true
+                $url .= "&idonly=true";
+            }
 
             # End of Logout -- SEND!
             SendCurl($url);
