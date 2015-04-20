@@ -1,11 +1,11 @@
 /**
  * Created by Dylan Hunt @ Smartlaunch on 3/08/2015.
  * ALTERED 4/10/2015 to support 1.0.2x86
- * Updated 4/14/2015
+ * Updated 4/19/2015 for timeLeft
  * captiveportal-logout.js
  */
 
-// 0: Error catching >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// 0: Error / Init functions>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $.ajaxSetup({
     // Usually triggered by invalid server IP:Port
     // (or if captiveportal-sl_ip.js not found)
@@ -19,29 +19,82 @@ function setError(e, msg) {
     $.error(msg + " @ " + e);
 }
 
-function isSLOnlineAndReachable() {
-    var completeURL = ServerAddress + "/smartlaunchversion";
-    console.log("Trying to ping SL Server @ " + completeURL + "..");
+// ** NOT USED **
+//function isSLOnlineAndReachable() {
+//    var completeURL = ServerAddress + "/smartlaunchversion";
+//    console.log("Trying to ping SL Server @ " + completeURL + "..");
+//
+//    $.getJSON(completeURL, null, function(result) { // Note crucial ?callback=?
+//        var ver = result.ServerVersion;
+//        if (ver) {
+//            IsServerOnline = true;
+//            console.log("SL Server online/reachable, v" + ver);
+//
+//            // Update server status
+//            //$( '#serverStatus' ).css('color', 'green');
+//            //$( '#serverStatus' ).html("Server Online");
+//
+//            // Send POST data to SL for logout_id (So SL can logout clients from SL)
+//            console.log("User '" + Username + "' is sending logout_id to " + ServerAddress + " ..");
+//            logoutSL(true);
+//        } else {
+//            // FAIL!
+//            IsServerOnline = false;
+//            console.log("WARNING: Logout scripts LOCAL ONLY; SL unreachable @ " + ServerAddress);
+//        }
+//    });
+//}
+
+function getTimeLeft() {
+    var completeURL = ServerAddress + "/users/" + Username;
+    console.log("Trying to get time left from SL Server @ " + completeURL + "..");
 
     $.getJSON(completeURL, null, function(result) { // Note crucial ?callback=?
-        var ver = result.ServerVersion;
-        if (ver) {
+        InitTimeLeft = result.Time;
+
+        if (InitTimeLeft) {
+            // Set into jsMoment() format for easy manipulation
+            MinsLeft = moment.duration(InitTimeLeft, 'minutes');
+            StrTimeLeft = MinsLeft.humanize() + ", " + MinsLeft.minutes() + " minutes";
+
+            // Server online + response
             IsServerOnline = true;
-            console.log("SL Server online/reachable, v" + ver);
+            console.log("user '" + Username + "' has " + StrTimeLeft);
+
+            // Set UI to reflect time left
+            $( '#status' ).val( StrTimeLeft );
 
             // Update server status
             //$( '#serverStatus' ).css('color', 'green');
             //$( '#serverStatus' ).html("Server Online");
 
-            // Send POST data to SL for logout_id (So SL can logout clients from SL)
-            console.log("User '" + Username + "' is sending logout_id to " + ServerAddress + " ..");
-            logoutSL(true);
+            // Subtract every min
+            var timer = $.timer(function() {
+                Tick1Min()
+            });
+
+            timer.set({ time : 6000, autostart : true });
+
         } else {
             // FAIL!
             IsServerOnline = false;
             console.log("WARNING: Logout scripts LOCAL ONLY; SL unreachable @ " + ServerAddress);
         }
     });
+}
+
+function Tick1Min() {
+    // -1min
+    MinsLeft.subtract(1, 'minutes');
+    // Show new txt with flashy highlight
+    StrTimeLeft = MinsLeft.humanize() + ", " + MinsLeft.minutes() + " minutes";
+    $( '#status' ).val( StrTimeLeft );
+    $( "#status" ).effect("highlight");
+
+    if (MinsLeft.asMinutes() == 1) {
+        // 1 minute left
+        $( '#status' ).css('background-color', '#E51400');
+    }
 }
 
 // 1: Globals >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -57,6 +110,9 @@ var Zone = "";                                              // <?=$cpzone;?> (sm
 var LogoutNowFlag = false;                                  // When just about to log out, disable things like redirect notice
 var IsServerOnline = false;                                 // Is SL server:port reachable, ready for AJAX?
 var SentLogoutID = false;                                   // Successful sending logout_id to REST?
+var InitTimeLeft = 0;                                       // Time left in seconds
+var MinsLeft = moment.duration(0, 'minutes');               // Time left in minutes, but in jsMoment() format
+var StrTimeLeft = "";                                       // xx hours, xx minutes remaining
 
 // 2: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $(document).ready(function() {
@@ -112,7 +168,10 @@ $(document).ready(function() {
     //    });
 
     // Is SL reachable/online?
-    isSLOnlineAndReachable();
+    //isSLOnlineAndReachable();
+
+    // Get time left
+    getTimeLeft();
 
     // On Unload -- warn if user leaves
     window.onbeforeunload = function(){

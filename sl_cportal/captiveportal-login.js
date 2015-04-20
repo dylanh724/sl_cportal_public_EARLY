@@ -1,5 +1,5 @@
 /**
- * captiveportal-login.js v2
+ * captiveportal-login.js
  * Created by Dylan Hunt @ Smartlaunch on 2/15/2015.
  * ALTERED 4/10/2015 to support 1.0.2x86
  * Updated 4/15/2015
@@ -60,9 +60,24 @@ var Clientmac = "";                                         // aa:bb:cc:dd:ee:ff
 var Clientip = "";                                          // 192.168.0.100
 var Viewport = "";                                          // .width, .height
 //var Zone = "";                                            // <?=$cpzone;?> (smartlaunch) @ #zone
+var Debug = true;                                           // Disables certain things
 
 // 2: Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 $(document).ready(function() {
+    // TESTS HERE >>
+
+    // Language
+    //$("[data-translate]").jqTranslate('index');
+
+    //$.playSound('captiveportal-welcome-back');
+
+    // /TESTS <<
+
+    // Detect debug mode
+    if (Debug) {
+        console.log("** DEBUG MODE ON -- SOME OPTIONS DISABLED **");
+    }
+
     // Detect if portrait; flip wallpaper
     Viewport = {
         width  : $(window).width(),
@@ -72,6 +87,7 @@ $(document).ready(function() {
     if (Viewport.height < Viewport.width) {
         //$( '#wrapper' ).css('background', 'none');
     }
+
     // HIDE ELEMENTS
     $( '.logoutform' ).remove();
     $( '#browserFail' ).remove();
@@ -105,22 +121,19 @@ $(document).ready(function() {
     // Set title
     document.title = "Smartlaunch WiFi - Login";
 
-    // Transfer effect
-    $( '#accept2' ).click(function () {
-        // Button is clicked..
-    });
-
     // Get clientmac
-    Clientmac = $( '#clientmac' ).val();
-    //alert("mac: " + Clientmac);
+    if (!Debug) {
+        Clientmac = $( '#clientmac' ).val();
+        //alert("mac: " + Clientmac);
 
-    // Get clientip
-    Clientip = $( '#clientip' ).val();
-    //alert("ip: " + Clientip);
+        // Get clientip
+        Clientip = $( '#clientip' ).val();
+        //alert("ip: " + Clientip);
 
-    // Get zone
-    //Zone = $( '#zone' ).val();
-    //alert("zone: " + Zone);
+        // Get zone
+        //Zone = $( '#zone' ).val();
+        //alert("zone: " + Zone);
+    }
 
     // Enable tooltips
     $(function () {
@@ -243,7 +256,13 @@ function finalValidate(login, msg) {
             resizable: false
         });
         console.log(msg);
-        loginCPortal();
+
+        if (!Debug) {
+            loginCPortal();
+        } else {
+            console.log("DEBUG: Stopped @ LoginCPortal()");
+        }
+
     } else if (!login) {
         // Login Failed - show fancy alert
         $(' <div id="dialog" title="Failed Login"><span class="msg"></span></div>').dialog({

@@ -5,9 +5,10 @@
         ############################################################################################################
         # Created by Dylan Hunt @ Smartlaunch on 2/15/2015 v2
         # ALTERED 4/10/2015 to support 1.0.2x86
-        # Updated 4/15/2015
+        # Updated 4/19/2015 for jsMoment() script
         # captiveportal-login-logout.php
         #########################################################################################################-->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Smartlaunch WiFi</title>
             <!-- Favicon 196x196 -------------------------------------------------------------------------------------->
             <link rel="icon" href="captiveportal-favicon.png">
@@ -19,11 +20,21 @@
             <link type="text/css" rel="stylesheet" href="captiveportal-normalize.css">
             <link type="text/css" rel="stylesheet" href="captiveportal-style.css">
 
+            <!-- Language Support ------------------------------------------------------------------------------------->
+            <script src="captiveportal-jqueryTranslator.js"></script>
+
             <!-- jQuery Scripts --------------------------------------------------------------------------------------->
             <script src="captiveportal-jquery-2.1.3.js"></script>
 
             <!-- jQuery-UI Scripts ------------------------------------------------------------------------------------>
             <script src="captiveportal-jquery-ui.js"></script>
+
+            <!-- jQuery Sounds ---------------------------------------------------------------------------------------->
+            <script src="captiveportal-jquery-playSound.js"></script>
+
+            <!-- jQuery Time Manipulation ----------------------------------------------------------------------------->
+            <script src="captiveportal-moment.js"></script>
+            <script src="captiveportal-jquery.timer.js"></script>
 
             <!-- Smartlaunch Scripts ---------------------------------------------------------------------------------->
             <script type="text/javascript" charset="utf-8" src="captiveportal-sl_ip.js"></script><?php
@@ -81,6 +92,7 @@
 			<!-- Login below -------------------------------------------------------------------------------------->
 			<section class="loginform cf" id="loginformsection">
                 <form name="login" id="loginform">
+                    <div id="test"></div>
                     <ul>
                         <li>
                             <img src="captiveportal-logo.png" id="logo">
@@ -116,7 +128,6 @@
                     </ul>
                 </form>
 			</section>
-			</section>
             <!-- /Login -->
 
 			<!-- Logout below ------------------------------------------------------------------------------------->
@@ -129,7 +140,6 @@
                     <p id="userText">Welcome, <?=$username;?>!</p>
                     <!-- Put timer here ? -->
                     <div class="timeLeft">
-                        <label for="status">Status:</label>
                     <p><input name="status"     id="status"     type="text" placeholder="..." readonly="true" value="Logged In"></p>
 					<input name="logout2"       id="logout2"    type="button" value="Logout WiFi" onclick="tryLogout()">
 					</div>

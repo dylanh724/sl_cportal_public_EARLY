@@ -9,7 +9,7 @@ html
 {
 	/* Placeholder */
 }
-html, body, td, th, input, select, #help, #keepOpen, #dc {
+html, body, td, th, input, select, #help, #keepOpen, #dc, #status {
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	font-size: 0.9em;
 	text-align: center;
@@ -97,6 +97,16 @@ label
 	color: white;
 	background-color: green;
 	text-align: center;
+
+	border: none ! important;
+	box-shadow: none ! important;
+	outline: none ! important;
+}
+#status:focus
+{
+	border: none ! important;
+	box-shadow: none ! important;
+	outline: none ! important;
 }
 
 /* DISCONNECT PAGE */
@@ -150,6 +160,7 @@ input
 {
 	background-color: white; 			/* Prevents blending into bg */
 }
+
 /* BUTTONS */
 #accept2, #register, #logout2
 {
