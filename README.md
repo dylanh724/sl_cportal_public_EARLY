@@ -18,3 +18,8 @@ Also responsible for leading an Agile team, modifying this skin for use with ggC
 
 This was further branched off to make a "Client Website" that utilized our API to pull stats and implement a generic login system that could be used as a template for their own website, if they used Smartlaunch.
 _________________________________________
+Stills from YouTube
+<img src="http://i.imgur.com/8bkdXl4.png">
+<img src="http://i.imgur.com/9e24Z6t.png">
+<img src="http://i.imgur.com/QVyPRif.png">
+<img src="http://i.imgur.com/aSOBvCg.png">
